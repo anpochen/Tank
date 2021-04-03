@@ -1,0 +1,6 @@
+#tank number
+initTankCount=5
+tankSpeed=5
+bulletSpeed=10
+gameWidth=1200
+gameHeight=700

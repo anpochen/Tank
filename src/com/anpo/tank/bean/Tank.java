@@ -1,5 +1,6 @@
 package com.anpo.tank.bean;
 
+import com.anpo.config.PropertyManager;
 import com.anpo.tank.enums.Direction;
 import com.anpo.resource.ResourceManager;
 import com.anpo.tank.enums.Group;
@@ -13,7 +14,7 @@ public class Tank {
     public static final int HEIGHT = ResourceManager.goodTankD.getHeight();
 
     private int x,y;
-    private static final int SPEED = 5;
+    private static final int SPEED = PropertyManager.getInt("tankSpeed");
     private Direction direction;
     private Group group = Group.BAD;
     private TankFrame tankFrame;

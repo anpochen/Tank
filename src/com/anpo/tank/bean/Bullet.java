@@ -1,5 +1,6 @@
 package com.anpo.tank.bean;
 
+import com.anpo.config.PropertyManager;
 import com.anpo.tank.enums.Direction;
 import com.anpo.resource.ResourceManager;
 import com.anpo.tank.enums.Group;
@@ -7,7 +8,7 @@ import com.anpo.tank.enums.Group;
 import java.awt.*;
 
 public class Bullet {
-    private static final int SPEED = 10;
+    private static final int SPEED = PropertyManager.getInt("bulletSpeed");
     public static final int WIDTH = ResourceManager.bulletD.getWidth();
     public static final int HEIGHT = ResourceManager.bulletD.getHeight();
 

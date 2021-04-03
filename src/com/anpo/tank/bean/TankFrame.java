@@ -1,5 +1,6 @@
 package com.anpo.tank.bean;
 
+import com.anpo.config.PropertyManager;
 import com.anpo.tank.enums.Direction;
 import com.anpo.tank.enums.Group;
 
@@ -10,8 +11,8 @@ import java.util.List;
 
 public class TankFrame extends Frame {
 
-    public static final int GAME_WIDTH = 1200;
-    public static final int GAME_HEIGHT = 700;
+    public static final int GAME_WIDTH = PropertyManager.getInt("gameWidth");
+    public static final int GAME_HEIGHT = PropertyManager.getInt("gameHeight");
 
     public List<Tank> tanks = new ArrayList<>();
     public List<Bullet> bullets = new ArrayList<>();
