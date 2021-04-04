@@ -7,6 +7,9 @@ import com.anpo.tank.bean.GameObject;
 import com.anpo.tank.bean.Tank;
 
 public class BulletTankCollider implements Collider{
+    /*
+    继续碰撞返回false  中断循环碰撞返回 true
+     */
     @Override
     public boolean collide(GameObject o1, GameObject o2, GameModel gameModel) {
         if (o1 instanceof Bullet && o2 instanceof Tank){
@@ -20,7 +23,7 @@ public class BulletTankCollider implements Collider{
         }
     }
 
-    //碰撞检测
+    //碰撞检测   撞死了返回 true  否则返回 false
     public boolean collidedWith(Bullet bullet, Tank tank, GameModel gameModel) {
         //如果都是同一组的，那么直接返回
         if(bullet.getGroup().equals(tank.getGroup())){

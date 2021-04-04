@@ -10,10 +10,9 @@ public class TankTankCollider implements Collider{
         if (o1 instanceof Tank && o2 instanceof Tank){
             Tank tank1 = (Tank)o1;
             Tank tank2 = (Tank)o2;
-            return collidedWith(tank1,tank2);
-        } else {
-            return false;
+            collidedWith(tank1,tank2);
         }
+        return false;
     }
 
     //碰撞检测
@@ -21,7 +20,6 @@ public class TankTankCollider implements Collider{
         if(tank1.getRectangle().intersects(tank2.getRectangle())){
             tank1.reverseDirection();
             tank2.reverseDirection();
-            return true;
         }
         return false;
     }

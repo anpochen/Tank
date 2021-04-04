@@ -3,6 +3,7 @@ package com.anpo.designPatterns.c04_facade_mediator.model;
 import com.anpo.config.PropertyManager;
 import com.anpo.designPatterns.c05_chainOfResponsibility.BulletTankCollider;
 import com.anpo.designPatterns.c05_chainOfResponsibility.Collider;
+import com.anpo.designPatterns.c05_chainOfResponsibility.ColliderChain;
 import com.anpo.designPatterns.c05_chainOfResponsibility.TankTankCollider;
 import com.anpo.tank.bean.GameObject;
 import com.anpo.tank.bean.Tank;
@@ -18,8 +19,7 @@ public class GameModel {
 
     public List<GameObject> gameObjects = new ArrayList<>();
 
-    Collider bulletTankCollide = new BulletTankCollider();
-    Collider tankTankCollide = new TankTankCollider();
+    ColliderChain colliderChain = new ColliderChain();
 
     int myTankX = PropertyManager.getInt("gameWidth")/2;
     int myTankY = PropertyManager.getInt("gameHeight")/2;
@@ -50,10 +50,13 @@ public class GameModel {
         }
 
         //碰撞检测
-        for (int i = 0; i < gameObjects.size(); i++) {
+        a:for (int i = 0; i < gameObjects.size(); i++) {
             for (int j = i+1; j < gameObjects.size(); j++) {
-                bulletTankCollide.collide(gameObjects.get(i),gameObjects.get(j),this);
-                tankTankCollide.collide(gameObjects.get(i),gameObjects.get(j),this);
+                GameObject gameObject1 = gameObjects.get(i);
+                GameObject gameObject2 = gameObjects.get(j);
+                if(!colliderChain.collide(gameObject1,gameObject2,this)){
+                    continue a;
+                }
             }
         }
     }
