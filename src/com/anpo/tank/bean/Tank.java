@@ -1,8 +1,8 @@
 package com.anpo.tank.bean;
 
 import com.anpo.config.PropertyManager;
-import com.anpo.designPatterns.strategy.DefaltFireStrategy;
-import com.anpo.designPatterns.strategy.FourDirectionFireStrategy;
+import com.anpo.designPatterns.c02_strategy.DefaltFireStrategy;
+import com.anpo.designPatterns.c02_strategy.FourDirectionFireStrategy;
 import com.anpo.tank.enums.Direction;
 import com.anpo.resource.ResourceManager;
 import com.anpo.tank.enums.Group;

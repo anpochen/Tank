@@ -1,4 +1,4 @@
-package com.anpo.designPatterns.strategy;
+package com.anpo.designPatterns.c02_strategy;
 
 import com.anpo.tank.bean.Tank;
 
