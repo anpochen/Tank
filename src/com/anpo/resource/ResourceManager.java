@@ -7,10 +7,18 @@ import java.util.Objects;
 
 public class ResourceManager {
 
+    private static final ResourceManager resourceManager = new ResourceManager();
+
     public static BufferedImage goodTankL,goodTankR,goodTankU,goodTankD;
     public static BufferedImage badTankL,badTankR,badTankU,badTankD;
     public static BufferedImage bulletL,bulletR,bulletU,bulletD;
-    public static BufferedImage explodes [] = new BufferedImage[16];
+    public static BufferedImage[] explodes = new BufferedImage[16];
+
+    private ResourceManager() {}
+
+    public ResourceManager getInstance(){
+        return resourceManager;
+    }
 
     static {
         try {

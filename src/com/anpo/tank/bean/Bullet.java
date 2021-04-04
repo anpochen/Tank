@@ -13,7 +13,7 @@ public class Bullet {
     public static final int HEIGHT = ResourceManager.bulletD.getHeight();
 
     private int x,y;
-    private Direction direction = Direction.DOWN;
+    private Direction direction;
     private Group group;
     private TankFrame tankFrame;
 
@@ -29,6 +29,8 @@ public class Bullet {
         this.tankFrame = tankFrame;
 
         rectangle.setRect(x,y,WIDTH,HEIGHT);
+
+        tankFrame.bullets.add(this);
     }
     
     public void paint(Graphics g){
