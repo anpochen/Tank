@@ -3,15 +3,17 @@ package com.anpo.tank.bean;
 import com.anpo.config.PropertyManager;
 import com.anpo.designPatterns.c02_strategy.DefaltFireStrategy;
 import com.anpo.designPatterns.c02_strategy.FourDirectionFireStrategy;
+import com.anpo.designPatterns.c04_facade_mediator.model.GameModel;
 import com.anpo.tank.enums.Direction;
 import com.anpo.resource.ResourceManager;
 import com.anpo.tank.enums.Group;
+import com.anpo.tank.frame.TankFrame;
 
 import java.awt.*;
 
 import java.util.Random;
 
-public class Tank {
+public class Tank extends GameObject{
     public static final int WIDTH = ResourceManager.goodTankD.getWidth();
     public static final int HEIGHT = ResourceManager.goodTankD.getHeight();
 
@@ -19,28 +21,29 @@ public class Tank {
     private static final int SPEED = PropertyManager.getInt("tankSpeed");
     private Direction direction;
     private Group group;
-    private TankFrame tankFrame;
+    private GameModel gameModel;
 
     Rectangle rectangle = new Rectangle();
 
-    private Random random = new Random();
+    private final Random random = new Random();
 
     private boolean moving = true;
     private boolean alive = true;
 
-    public Tank(int x, int y, Direction direction,Group group,TankFrame tankFrame) {
+    public Tank(int x, int y, Direction direction, boolean moving, Group group, GameModel gameModel) {
         this.x = x;
         this.y = y;
         this.direction = direction;
+        this.moving = moving;
         this.group = group;
-        this.tankFrame = tankFrame;
+        this.gameModel = gameModel;
 
         rectangle.setRect(x,y,WIDTH,HEIGHT);
     }
 
     public void paint(Graphics g) {
         if (!alive){
-            tankFrame.tanks.remove(this);
+            gameModel.gameObjects.remove(this);
         }
 
         /*Color color = g.getColor();
@@ -120,7 +123,7 @@ public class Tank {
     }
 
     //边界时调转方向
-    private void reverseDirection() {
+    public void reverseDirection() {
         if (this.group == Group.GOOD){
             return;
         }
@@ -201,11 +204,19 @@ public class Tank {
         this.group = group;
     }
 
-    public TankFrame getTankFrame() {
-        return tankFrame;
+    public GameModel getGameModel() {
+        return this.gameModel;
     }
 
-    public void setTankFrame(TankFrame tankFrame) {
-        this.tankFrame = tankFrame;
+    public void setGameModel(GameModel gameModel) {
+        this.gameModel = gameModel;
+    }
+
+    public Rectangle getRectangle() {
+        return rectangle;
+    }
+
+    public void setRectangle(Rectangle rectangle) {
+        this.rectangle = rectangle;
     }
 }

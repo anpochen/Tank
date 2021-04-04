@@ -1,6 +1,6 @@
 package com.anpo.designPatterns.c02_strategy;
 
-import com.anpo.tank.bean.Audio;
+import com.anpo.resource.Audio;
 import com.anpo.tank.bean.Bullet;
 import com.anpo.tank.bean.Tank;
 import com.anpo.tank.enums.Direction;
@@ -23,7 +23,7 @@ public class FourDirectionFireStrategy implements FireStrategy{
         int bulletY = tank.getY() + Tank.HEIGHT/2 - Bullet.HEIGHT/2;
         Direction [] directions = Direction.values();
         for (Direction direction : directions) {
-            new Bullet(bulletX, bulletY, direction, tank.getGroup(), tank.getTankFrame());
+            new Bullet(bulletX, bulletY, direction, tank.getGroup(), tank.getGameModel());
         }
         if (tank.getGroup() == Group.GOOD){
             new Thread(()->new Audio("com/anpo/resource/audio/tank_fire.wav").play()).start();

@@ -1,4 +1,4 @@
-package com.anpo.tank.bean;
+package com.anpo.resource;
 
 import javax.sound.sampled.*;
 import java.io.IOException;

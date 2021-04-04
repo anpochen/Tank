@@ -1,25 +1,19 @@
-package com.anpo.tank.bean;
+package com.anpo.tank.frame;
 
 import com.anpo.config.PropertyManager;
+import com.anpo.designPatterns.c04_facade_mediator.model.GameModel;
+import com.anpo.tank.bean.Tank;
 import com.anpo.tank.enums.Direction;
-import com.anpo.tank.enums.Group;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class TankFrame extends Frame {
 
+    GameModel gameModel = new GameModel();
+
     public static final int GAME_WIDTH = PropertyManager.getInt("gameWidth");
     public static final int GAME_HEIGHT = PropertyManager.getInt("gameHeight");
-
-    public List<Tank> tanks = new ArrayList<>();
-    public List<Bullet> bullets = new ArrayList<>();
-    public List<Explode> explodes = new ArrayList<>();
-
-    Tank myTank = new Tank(200,200, Direction.DOWN, Group.GOOD,this);
-//    Bullet bullet = new Bullet(200,200,Direction.DOWN,this);
 
     public TankFrame() throws HeadlessException {
         setSize(GAME_WIDTH,GAME_HEIGHT);
@@ -39,60 +33,7 @@ public class TankFrame extends Frame {
 
     @Override
     public void paint(Graphics g) {
-        Color color = g.getColor();
-        g.setColor(Color.GREEN);
-        g.drawString("敌方坦克的数量："+ tanks.size(),10, 60);
-        g.drawString("子弹的数量："+ bullets.size(),10, 80);
-        g.setColor(color);
-
-        myTank.paint(g);
-//        bullet.paint(g);
-        /**
-         * 第一种，这种普通的遍历，同时在子弹类的paint方法中删除元素不会报错
-         */
-        for (int i = 0; i<bullets.size();i++){
-            Bullet bullet = bullets.get(i);
-            bullet.paint(g);
-        }
-
-        /**
-         * 这种写法在需要同时删除bullets中的元素时会报错
-         */
-        /*for (Bullet bullet: bullets) {
-            bullet.paint(g);
-        }*/
-
-        /**
-         * 第二种，使用Iterator，只能在这里删除无效的子弹
-         */
-        /*Iterator<Bullet> iterator = bullets.iterator();
-        for (;iterator.hasNext();){
-            Bullet bullet= iterator.next();
-            if (!bullet.isAlive()){
-                // 调用这个删除方法也会报错
-                //bullets.remove(bullet);
-                iterator.remove();
-            }
-            bullet.paint(g);
-        }*/
-
-        /**
-         * 显示敌方坦克
-         */
-        for (int i = 0; i < tanks.size(); i++) {
-            tanks.get(i).paint(g);
-        }
-
-        //碰撞检测
-        for (int i = 0; i < bullets.size(); i++) {
-            for (int j = 0; j < tanks.size(); j++) {
-                bullets.get(i).collidedWith(tanks.get(j));
-            }
-        }
-
-        for (int i = 0; i < explodes.size(); i++) {
-            explodes.get(i).paint(g);
-        }
+        gameModel.paint(g);
     }
 
     /**
@@ -195,13 +136,15 @@ public class TankFrame extends Frame {
                 bd = false;
             }
             if(keyCode == KeyEvent.VK_SPACE){
-                myTank.fire();
+                gameModel.myTank.fire();
 //                System.out.println("fire...");
             }
             setMainTankDirection();
         }
 
         private void setMainTankDirection() {
+
+            Tank myTank = gameModel.myTank;
 
             if(!bl && !br && !bu && !bd){
                 myTank.setMoving(false);
