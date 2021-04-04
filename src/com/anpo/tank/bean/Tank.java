@@ -1,6 +1,8 @@
 package com.anpo.tank.bean;
 
 import com.anpo.config.PropertyManager;
+import com.anpo.designPatterns.strategy.DefaltFireStrategy;
+import com.anpo.designPatterns.strategy.FourDirectionFireStrategy;
 import com.anpo.tank.enums.Direction;
 import com.anpo.resource.ResourceManager;
 import com.anpo.tank.enums.Group;
@@ -16,7 +18,7 @@ public class Tank {
     private int x,y;
     private static final int SPEED = PropertyManager.getInt("tankSpeed");
     private Direction direction;
-    private Group group = Group.BAD;
+    private Group group;
     private TankFrame tankFrame;
 
     Rectangle rectangle = new Rectangle();
@@ -136,7 +138,6 @@ public class Tank {
         }
         if (direction == Direction.DOWN){
             direction = Direction.UP;
-            return;
         }
     }
 
@@ -145,11 +146,10 @@ public class Tank {
     }
 
     public void fire() {
-        int bulletX = this.x + Tank.WIDTH/2 - Bullet.WIDTH/2;
-        int bulletY = this.y + Tank.HEIGHT/2 - Bullet.HEIGHT/2;
-        tankFrame.bullets.add(new Bullet(bulletX,bulletY,direction,group,tankFrame));
-        if (this.group == Group.GOOD){
-            new Thread(()->new Audio("com/anpo/resource/audio/tank_fire.wav").play()).start();
+        if (this.group == Group.BAD){
+            DefaltFireStrategy.getInstance().fire(this);
+        }else {
+            FourDirectionFireStrategy.getInstance().fire(this);
         }
     }
 
@@ -199,5 +199,13 @@ public class Tank {
 
     public void setGroup(Group group) {
         this.group = group;
+    }
+
+    public TankFrame getTankFrame() {
+        return tankFrame;
+    }
+
+    public void setTankFrame(TankFrame tankFrame) {
+        this.tankFrame = tankFrame;
     }
 }

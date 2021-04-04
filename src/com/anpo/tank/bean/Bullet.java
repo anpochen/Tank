@@ -13,7 +13,7 @@ public class Bullet {
     public static final int HEIGHT = ResourceManager.bulletD.getHeight();
 
     private int x,y;
-    private Direction direction = Direction.DOWN;
+    private Direction direction;
     private Group group;
     private TankFrame tankFrame;
 
@@ -29,11 +29,13 @@ public class Bullet {
         this.tankFrame = tankFrame;
 
         rectangle.setRect(x,y,WIDTH,HEIGHT);
+
+        tankFrame.bullets.add(this);
     }
     
     public void paint(Graphics g){
-        /**
-         * 如果子弹超出范围，将其从列表中删除
+        /*
+          如果子弹超出范围，将其从列表中删除
          */
         if (!alive){
             tankFrame.bullets.remove(this);
@@ -61,8 +63,8 @@ public class Bullet {
 
         //update rectangle
         rectangle.setLocation(x,y);
-        /**
-         * 设置子弹超出范围就会设置为false，避免对象未释放造成内存泄漏
+        /*
+          设置子弹超出范围就会设置为false，避免对象未释放造成内存泄漏
          */
         if (x<0 || y <0 || x> TankFrame.GAME_WIDTH || y> TankFrame.GAME_HEIGHT){
             alive = false;
@@ -103,7 +105,7 @@ public class Bullet {
             int eX = tank.getX() + Tank.WIDTH/2 - Explode.WIDTH/2;
             int eY = tank.getY() + Tank.HEIGHT/2 - Explode.HEIGHT/2;
             tankFrame.explodes.add(new Explode(eX, eY,tankFrame));
-            new Audio("com/anpo/resource/audio/explode.wav").play();
+
         }
 
     }
