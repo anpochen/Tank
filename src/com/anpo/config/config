@@ -1,6 +1,17 @@
-#tank number
-initTankCount=5
-tankSpeed=5
-bulletSpeed=10
+#game
 gameWidth=1200
 gameHeight=700
+
+
+#enemy tank number
+initTankCount=5
+
+#base
+tankSpeed=5
+bulletSpeed=10
+
+#super
+superTankSpeed=10
+superTankWidth=50
+superTankheight=50
+superBulletSpeed=200

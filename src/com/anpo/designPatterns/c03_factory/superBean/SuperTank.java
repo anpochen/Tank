@@ -1,34 +1,36 @@
-package com.anpo.tank.bean;
+package com.anpo.designPatterns.c03_factory.superBean;
 
 import com.anpo.config.PropertyManager;
-import com.anpo.designPatterns.strategy.DefaltFireStrategy;
-import com.anpo.designPatterns.strategy.FourDirectionFireStrategy;
+import com.anpo.designPatterns.c02_strategy.DefaltFireStrategy;
+import com.anpo.designPatterns.c02_strategy.FourDirectionFireStrategy;
+import com.anpo.designPatterns.c03_factory.bean.Tank;
+import com.anpo.tank.baseBean.BaseTank;
+import com.anpo.tank.baseBean.TankFrame;
 import com.anpo.tank.enums.Direction;
-import com.anpo.resource.ResourceManager;
 import com.anpo.tank.enums.Group;
 
 import java.awt.*;
-
 import java.util.Random;
 
-public class Tank {
-    public static final int WIDTH = ResourceManager.goodTankD.getWidth();
-    public static final int HEIGHT = ResourceManager.goodTankD.getHeight();
+public class SuperTank extends Tank {
+
+    public static final int WIDTH = PropertyManager.getInt("superTankWidth");
+    public static final int HEIGHT = PropertyManager.getInt("superTankheight");
 
     private int x,y;
-    private static final int SPEED = PropertyManager.getInt("tankSpeed");
+    private static final int SPEED = PropertyManager.getInt("superTankSpeed");
     private Direction direction;
     private Group group;
     private TankFrame tankFrame;
 
-    Rectangle rectangle = new Rectangle();
+    private Rectangle rectangle = new Rectangle();
 
-    private Random random = new Random();
+    private final Random random = new Random();
 
     private boolean moving = true;
     private boolean alive = true;
 
-    public Tank(int x, int y, Direction direction,Group group,TankFrame tankFrame) {
+    public SuperTank(int x, int y, Direction direction,Group group,TankFrame tankFrame) {
         this.x = x;
         this.y = y;
         this.direction = direction;
@@ -43,26 +45,12 @@ public class Tank {
             tankFrame.tanks.remove(this);
         }
 
-        /*Color color = g.getColor();
+        Color color = g.getColor();
         g.setColor(Color.GREEN);
-        g.fillRect(x,y,50,50);
-        g.drawString("子弹的数量："+ bullets.size(),10,60);
-        g.setColor(color);*/
+        g.fillOval(x,y,getWIDTH(),getHEIGHT());
 
-        switch (direction){
-            case LEFT:
-                g.drawImage(this.group == Group.GOOD ? ResourceManager.goodTankL : ResourceManager.badTankL,x,y,null);
-                break;
-            case RIGHT:
-                g.drawImage(this.group == Group.GOOD ? ResourceManager.goodTankR : ResourceManager.badTankR,x,y,null);
-                break;
-            case UP:
-                g.drawImage(this.group == Group.GOOD ? ResourceManager.goodTankU : ResourceManager.badTankU,x,y,null);
-                break;
-            case DOWN:
-                g.drawImage(this.group == Group.GOOD ? ResourceManager.goodTankD : ResourceManager.badTankD,x,y,null);
-                break;
-        }
+        g.setColor(color);
+
         move();
     }
 
@@ -109,12 +97,12 @@ public class Tank {
             y = 25;
             reverseDirection();
         }
-        if(x> TankFrame.GAME_WIDTH * 0.99 - Tank.WIDTH){
-            x = (int) (TankFrame.GAME_WIDTH * 0.99 - Tank.WIDTH);
+        if(x> TankFrame.GAME_WIDTH * 0.99 - BaseTank.WIDTH){
+            x = (int) (TankFrame.GAME_WIDTH * 0.99 - BaseTank.WIDTH);
             reverseDirection();
         }
-        if(y > TankFrame.GAME_HEIGHT * 0.99 - Tank.HEIGHT){
-            y = (int) (TankFrame.GAME_HEIGHT * 0.99 - Tank.HEIGHT);
+        if(y > TankFrame.GAME_HEIGHT * 0.99 - BaseTank.HEIGHT){
+            y = (int) (TankFrame.GAME_HEIGHT * 0.99 - BaseTank.HEIGHT);
             reverseDirection();
         }
     }
@@ -207,5 +195,15 @@ public class Tank {
 
     public void setTankFrame(TankFrame tankFrame) {
         this.tankFrame = tankFrame;
+    }
+
+    @Override
+    public Rectangle getRectangle() {
+        return rectangle;
+    }
+
+    @Override
+    public void setRectangle(Rectangle rectangle) {
+        this.rectangle = rectangle;
     }
 }

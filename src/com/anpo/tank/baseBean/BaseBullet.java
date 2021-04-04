@@ -1,13 +1,14 @@
-package com.anpo.tank.bean;
+package com.anpo.tank.baseBean;
 
 import com.anpo.config.PropertyManager;
+import com.anpo.designPatterns.c03_factory.bean.Tank;
 import com.anpo.tank.enums.Direction;
 import com.anpo.resource.ResourceManager;
 import com.anpo.tank.enums.Group;
 
 import java.awt.*;
 
-public class Bullet {
+public class BaseBullet extends com.anpo.designPatterns.c03_factory.bean.Bullet {
     private static final int SPEED = PropertyManager.getInt("bulletSpeed");
     public static final int WIDTH = ResourceManager.bulletD.getWidth();
     public static final int HEIGHT = ResourceManager.bulletD.getHeight();
@@ -21,7 +22,7 @@ public class Bullet {
 
     private boolean alive = true;
 
-    public Bullet(int x, int y, Direction direction,Group group,TankFrame tankFrame) {
+    public BaseBullet(int x, int y, Direction direction, Group group, TankFrame tankFrame) {
         this.x = x;
         this.y = y;
         this.direction = direction;
@@ -99,12 +100,13 @@ public class Bullet {
         /*//这里每次碰撞检测时都要新建一个矩形对象，垃圾太多，放到对象中
         Rectangle rectangle1 = new Rectangle(x,y,WIDTH,HEIGHT);
         Rectangle rectangle2 = new Rectangle(tank.getX(), tank.getY(), Tank.WIDTH, Tank.HEIGHT);*/
-        if(this.rectangle.intersects(tank.rectangle)){
+        if(this.rectangle.intersects(tank.getRectangle())){
             tank.die();
             this.die();
-            int eX = tank.getX() + Tank.WIDTH/2 - Explode.WIDTH/2;
-            int eY = tank.getY() + Tank.HEIGHT/2 - Explode.HEIGHT/2;
-            tankFrame.explodes.add(new Explode(eX, eY,tankFrame));
+            int eX = tank.getX() + BaseTank.WIDTH/2 - BaseExplode.WIDTH/2;
+            int eY = tank.getY() + BaseTank.HEIGHT/2 - BaseExplode.HEIGHT/2;
+//            tankFrame.explodes.add(new Explode(eX, eY,tankFrame));
+            tankFrame.explodes.add(tankFrame.gameFactory.createExplode(eX, eY,tankFrame));
 
         }
 

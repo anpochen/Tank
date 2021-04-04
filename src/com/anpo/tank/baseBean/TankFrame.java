@@ -1,6 +1,12 @@
-package com.anpo.tank.bean;
+package com.anpo.tank.baseBean;
 
 import com.anpo.config.PropertyManager;
+import com.anpo.designPatterns.c03_factory.bean.Bullet;
+import com.anpo.designPatterns.c03_factory.bean.Explode;
+import com.anpo.designPatterns.c03_factory.bean.Tank;
+import com.anpo.designPatterns.c03_factory.factory.BaseBeanFactory;
+import com.anpo.designPatterns.c03_factory.factory.GameFactory;
+import com.anpo.designPatterns.c03_factory.factory.SuperBeanFactory;
 import com.anpo.tank.enums.Direction;
 import com.anpo.tank.enums.Group;
 
@@ -18,8 +24,12 @@ public class TankFrame extends Frame {
     public List<Bullet> bullets = new ArrayList<>();
     public List<Explode> explodes = new ArrayList<>();
 
-    Tank myTank = new Tank(200,200, Direction.DOWN, Group.GOOD,this);
+    public GameFactory myTankFactory = new SuperBeanFactory();
+    Tank myTank =  myTankFactory.createTank(200,200, Direction.DOWN, Group.GOOD,this);
 //    Bullet bullet = new Bullet(200,200,Direction.DOWN,this);
+
+//    public GameFactory gf = new SuperBeanFactory();
+    public GameFactory gameFactory = new BaseBeanFactory();
 
     public TankFrame() throws HeadlessException {
         setSize(GAME_WIDTH,GAME_HEIGHT);
