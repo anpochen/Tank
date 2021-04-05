@@ -2,9 +2,7 @@ package com.anpo.designPatterns.c04_facade_mediator.model;
 
 import com.anpo.config.PropertyManager;
 import com.anpo.designPatterns.c05_chainOfResponsibility.ColliderChain;
-import com.anpo.tank.bean.GameObject;
-import com.anpo.tank.bean.Tank;
-import com.anpo.tank.bean.Wall;
+import com.anpo.tank.bean.*;
 import com.anpo.tank.frame.TankFrame;
 import com.anpo.tank.enums.Direction;
 import com.anpo.tank.enums.Group;
@@ -73,9 +71,32 @@ public class GameModel {
 
         //myTank.paint(g);
 
+        //统计坦克和炸弹的数量
+        int tankNum = 0;
+        int bulletNum = 0;
+        int explodeNum = 0;
         for (int i = 0; i < gameObjects.size(); i++) {
-            gameObjects.get(i).paint(g);
+            GameObject gameObject = gameObjects.get(i);
+            gameObject.paint(g);
+            if(gameObject instanceof Tank && ((Tank) gameObject).getGroup() == Group.BAD){
+                tankNum ++;
+            }
+            if(gameObject instanceof Bullet){
+                bulletNum ++;
+            }
+            if(gameObject instanceof Explode){
+                explodeNum ++;
+            }
+
         }
+
+        Color color = g.getColor();
+        g.setColor(Color.GREEN);
+        g.drawString("游戏物体的数量"+ gameObjects.size(),10,44);
+        g.drawString("敌方坦克的数量"+ tankNum,10,60);
+        g.drawString("子弹的数量"+ bulletNum,10,76);
+        g.drawString("爆炸的数量"+ explodeNum,10,92);
+        g.setColor(color);
 
         //碰撞检测
         a:for (int i = 0; i < gameObjects.size(); i++) {

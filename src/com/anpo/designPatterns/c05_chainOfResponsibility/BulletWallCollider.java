@@ -25,7 +25,7 @@ public class BulletWallCollider implements Collider{
              */
             /*int eX = bullet.getX() - Explode.WIDTH/2;
             int eY = bullet.getY() - Explode.HEIGHT/2;
-            gameModel.gameObjects.add(new Explode(eX, eY, gameModel));*/
+            gameModel.gameObjects.add(new Explode(eX, eY));*/
             return true;
         }
         return false;

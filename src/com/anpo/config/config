@@ -6,8 +6,8 @@ gameHeight=700
 initTankCount=10
 
 
-tankSpeed=10
-bulletSpeed=20
+tankSpeed=4
+bulletSpeed=5
 
 
 

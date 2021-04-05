@@ -14,7 +14,6 @@ public class Bullet extends GameObject{
     public static final int WIDTH = ResourceManager.bulletD.getWidth();
     public static final int HEIGHT = ResourceManager.bulletD.getHeight();
 
-    private int x,y;
     private Direction direction;
     private Group group;
 
@@ -25,6 +24,8 @@ public class Bullet extends GameObject{
     public Bullet(int x, int y, Direction direction, Group group) {
         this.x = x;
         this.y = y;
+        this.width = WIDTH;
+        this.height = HEIGHT;
         this.direction = direction;
         this.group = group;
 

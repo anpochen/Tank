@@ -6,8 +6,6 @@ import java.awt.*;
 
 public class Wall extends GameObject{
 
-    int width,height;
-
     Rectangle rectangle = new Rectangle();
 
     public Wall(int x,int y,int width, int height) {

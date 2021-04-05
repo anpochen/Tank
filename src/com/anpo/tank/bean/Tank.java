@@ -17,7 +17,6 @@ public class Tank extends GameObject{
     public static final int WIDTH = ResourceManager.goodTankD.getWidth();
     public static final int HEIGHT = ResourceManager.goodTankD.getHeight();
 
-    private int x,y;
     private int oldX,oldY;
     private static final int SPEED = PropertyManager.getInt("tankSpeed");
     private Direction direction;
@@ -33,6 +32,8 @@ public class Tank extends GameObject{
     public Tank(int x, int y, Direction direction, boolean moving, Group group) {
         this.x = x;
         this.y = y;
+        this.width = WIDTH;
+        this.height = HEIGHT;
         this.direction = direction;
         this.moving = moving;
         this.group = group;
@@ -121,10 +122,9 @@ public class Tank extends GameObject{
 
     //边界时调转方向
     public void reverseDirection() {
-        /*
-        影响两个坦克分开，回到原位与调转方向不能一起使用
+        //影响两个坦克分开，回到原位与调转方向不能一起使用
         x = oldX;
-        y = oldY;*/
+        y = oldY;
         if (this.group == Group.GOOD){
             return;
         }
