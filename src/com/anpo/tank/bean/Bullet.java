@@ -17,22 +17,20 @@ public class Bullet extends GameObject{
     private int x,y;
     private Direction direction;
     private Group group;
-    private GameModel gameModel;
 
     Rectangle rectangle = new Rectangle();
 
     private boolean alive = true;
 
-    public Bullet(int x, int y, Direction direction, Group group, GameModel gameModel) {
+    public Bullet(int x, int y, Direction direction, Group group) {
         this.x = x;
         this.y = y;
         this.direction = direction;
         this.group = group;
-        this.gameModel = gameModel;
 
         rectangle.setRect(x,y,WIDTH,HEIGHT);
 
-        gameModel.gameObjects.add(this);
+        GameModel.getINSTANCE().add(this);
     }
     
     public void paint(Graphics g){
@@ -40,7 +38,7 @@ public class Bullet extends GameObject{
           如果子弹超出范围，将其从列表中删除
          */
         if (!alive){
-            gameModel.gameObjects.remove(this);
+            GameModel.getINSTANCE().remove(this);
         }
 
         switch (direction){

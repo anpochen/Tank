@@ -18,9 +18,12 @@ public class DefaltFireStrategy implements FireStrategy{
 
     @Override
     public void fire(Tank tank) {
+        if (!tank.isAlive()){
+            return;
+        }
         int bulletX = tank.getX() + Tank.WIDTH/2 - Bullet.WIDTH/2;
         int bulletY = tank.getY() + Tank.HEIGHT/2 - Bullet.HEIGHT/2;
-        new Bullet(bulletX,bulletY,tank.getDirection(),tank.getGroup(),tank.getGameModel());
+        new Bullet(bulletX,bulletY,tank.getDirection(),tank.getGroup());
         if (tank.getGroup() == Group.GOOD){
             new Thread(()->new Audio("com/anpo/resource/audio/tank_fire.wav").play()).start();
         }

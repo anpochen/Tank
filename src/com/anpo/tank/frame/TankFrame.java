@@ -10,8 +10,6 @@ import java.awt.event.*;
 
 public class TankFrame extends Frame {
 
-    GameModel gameModel = new GameModel();
-
     public static final int GAME_WIDTH = PropertyManager.getInt("gameWidth");
     public static final int GAME_HEIGHT = PropertyManager.getInt("gameHeight");
 
@@ -33,7 +31,7 @@ public class TankFrame extends Frame {
 
     @Override
     public void paint(Graphics g) {
-        gameModel.paint(g);
+        GameModel.getINSTANCE().paint(g);
     }
 
     /**
@@ -106,23 +104,6 @@ public class TankFrame extends Frame {
         public void keyReleased(KeyEvent e) {
             int keyCode = e.getKeyCode();
 
-            /*switch (keyCode){
-                case KeyEvent.VK_LEFT:
-                    bl = false;
-                    break;
-                case KeyEvent.VK_RIGHT:
-                    br = false;
-                    break;
-                case KeyEvent.VK_UP:
-                    bu = false;
-                    break;
-                case KeyEvent.VK_DOWN:
-                    bd = false;
-                    break;
-                default:
-                    break;
-            }*/
-
             if(keyCode == KeyEvent.VK_LEFT){
                 bl = false;
             }
@@ -136,7 +117,7 @@ public class TankFrame extends Frame {
                 bd = false;
             }
             if(keyCode == KeyEvent.VK_SPACE){
-                gameModel.myTank.fire();
+                GameModel.getINSTANCE().myTank.fire();
 //                System.out.println("fire...");
             }
             setMainTankDirection();
@@ -144,7 +125,7 @@ public class TankFrame extends Frame {
 
         private void setMainTankDirection() {
 
-            Tank myTank = gameModel.myTank;
+            Tank myTank = GameModel.getINSTANCE().myTank;
 
             if(!bl && !br && !bu && !bd){
                 myTank.setMoving(false);

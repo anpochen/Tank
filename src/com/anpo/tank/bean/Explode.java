@@ -11,22 +11,22 @@ public class Explode extends GameObject{
     public static final int HEIGHT = ResourceManager.explodes[0].getHeight();
 
     private int x,y;
-    private GameModel gameModel;
 
     private int step = 0;
 
-    public Explode(int x, int y, GameModel gameModel) {
+    public Explode(int x, int y) {
         this.x = x;
         this.y = y;
-        this.gameModel = gameModel;
 
         new Thread(()->new Audio("com/anpo/resource/audio/explode.wav").play()).start();
+
+        GameModel.getINSTANCE().add(this);
     }
 
     public void paint(Graphics g){
         g.drawImage(ResourceManager.explodes[step++],x,y,null);
         if(step >= ResourceManager.explodes.length){
-            gameModel.gameObjects.remove(this);
+            GameModel.getINSTANCE().remove(this);
             step =0;
         }
     }

@@ -1,5 +1,6 @@
 package com.anpo.designPatterns.c05_chainOfResponsibility;
 
+import com.anpo.config.PropertyManager;
 import com.anpo.designPatterns.c04_facade_mediator.model.GameModel;
 import com.anpo.tank.bean.GameObject;
 
@@ -11,8 +12,14 @@ public class ColliderChain implements Collider{
     List<Collider> colliders = new LinkedList<>();
 
     public ColliderChain() {
-        colliders.add(new BulletTankCollider());
-        colliders.add(new TankTankCollider());
+        String[] colliders = PropertyManager.getString("colliders").split(";");
+        for (String s:colliders) {
+            try {
+                add((Collider) Class.forName(s).newInstance());
+            } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void add(Collider collider){
@@ -22,8 +29,10 @@ public class ColliderChain implements Collider{
     @Override
     public boolean collide(GameObject o1, GameObject o2, GameModel gameModel) {
         for (int i = 0; i < colliders.size(); i++) {
-            colliders.get(i).collide(o1, o2, gameModel);
+            if (colliders.get(i).collide(o1, o2, gameModel)){
+                return true;
+            }
         }
-        return true;
+        return false;
     }
 }

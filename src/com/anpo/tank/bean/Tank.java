@@ -18,10 +18,10 @@ public class Tank extends GameObject{
     public static final int HEIGHT = ResourceManager.goodTankD.getHeight();
 
     private int x,y;
+    private int oldX,oldY;
     private static final int SPEED = PropertyManager.getInt("tankSpeed");
     private Direction direction;
     private Group group;
-    private GameModel gameModel;
 
     Rectangle rectangle = new Rectangle();
 
@@ -30,27 +30,22 @@ public class Tank extends GameObject{
     private boolean moving = true;
     private boolean alive = true;
 
-    public Tank(int x, int y, Direction direction, boolean moving, Group group, GameModel gameModel) {
+    public Tank(int x, int y, Direction direction, boolean moving, Group group) {
         this.x = x;
         this.y = y;
         this.direction = direction;
         this.moving = moving;
         this.group = group;
-        this.gameModel = gameModel;
 
         rectangle.setRect(x,y,WIDTH,HEIGHT);
+
+        GameModel.getINSTANCE().add(this);
     }
 
     public void paint(Graphics g) {
         if (!alive){
-            gameModel.gameObjects.remove(this);
+            GameModel.getINSTANCE().remove(this);
         }
-
-        /*Color color = g.getColor();
-        g.setColor(Color.GREEN);
-        g.fillRect(x,y,50,50);
-        g.drawString("子弹的数量："+ bullets.size(),10,60);
-        g.setColor(color);*/
 
         switch (direction){
             case LEFT:
@@ -70,6 +65,8 @@ public class Tank extends GameObject{
     }
 
     private void move() {
+        oldX = x;
+        oldY = y;
         if (!moving){
             return;
         }else {
@@ -124,6 +121,10 @@ public class Tank extends GameObject{
 
     //边界时调转方向
     public void reverseDirection() {
+        /*
+        影响两个坦克分开，回到原位与调转方向不能一起使用
+        x = oldX;
+        y = oldY;*/
         if (this.group == Group.GOOD){
             return;
         }
@@ -204,19 +205,19 @@ public class Tank extends GameObject{
         this.group = group;
     }
 
-    public GameModel getGameModel() {
-        return this.gameModel;
-    }
-
-    public void setGameModel(GameModel gameModel) {
-        this.gameModel = gameModel;
-    }
-
     public Rectangle getRectangle() {
         return rectangle;
     }
 
     public void setRectangle(Rectangle rectangle) {
         this.rectangle = rectangle;
+    }
+
+    public boolean isAlive() {
+        return alive;
+    }
+
+    public void setAlive(boolean alive) {
+        this.alive = alive;
     }
 }

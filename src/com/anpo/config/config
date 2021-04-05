@@ -1,10 +1,18 @@
-#tank number
-initTankCount=100
-
-
-tankSpeed=5
-bulletSpeed=10
-
-
+#game visiable
 gameWidth=1200
 gameHeight=700
+
+#tank number
+initTankCount=10
+
+
+tankSpeed=10
+bulletSpeed=20
+
+
+
+#colliders
+colliders=com.anpo.designPatterns.c05_chainOfResponsibility.BulletTankCollider;com.anpo.designPatterns.c05_chainOfResponsibility.TankTankCollider;com.anpo.designPatterns.c05_chainOfResponsibility.BulletWallCollider;com.anpo.designPatterns.c05_chainOfResponsibility.TankWallCollider
+
+#wall
+wall=0.1,0.4,50,50;0.6,0.4,50,50;0.6,0.6,50,50;0.3,0.8,50,50
