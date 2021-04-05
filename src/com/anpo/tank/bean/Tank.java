@@ -4,6 +4,9 @@ import com.anpo.config.PropertyManager;
 import com.anpo.designPatterns.c02_strategy.DefaltFireStrategy;
 import com.anpo.designPatterns.c02_strategy.FourDirectionFireStrategy;
 import com.anpo.designPatterns.c04_facade_mediator.model.GameModel;
+import com.anpo.designPatterns.c07_observer.TankFireEvent;
+import com.anpo.designPatterns.c07_observer.TankFireHandler;
+import com.anpo.designPatterns.c07_observer.TankFireObserver;
 import com.anpo.tank.enums.Direction;
 import com.anpo.resource.ResourceManager;
 import com.anpo.tank.enums.Group;
@@ -11,6 +14,8 @@ import com.anpo.tank.frame.TankFrame;
 
 import java.awt.*;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 
 public class Tank extends GameObject{
@@ -39,6 +44,9 @@ public class Tank extends GameObject{
         this.group = group;
 
         rectangle.setRect(x,y,WIDTH,HEIGHT);
+
+        //将观察者装入到责任链中
+        tankFireObservers.add(new TankFireHandler());
 
         GameModel.getINSTANCE().add(this);
     }
@@ -154,6 +162,14 @@ public class Tank extends GameObject{
             DefaltFireStrategy.getInstance().fire(this);
         }else {
             FourDirectionFireStrategy.getInstance().fire(this);
+        }
+    }
+
+    List<TankFireObserver> tankFireObservers = new LinkedList<>();
+    public void handlerFireKey(){
+        TankFireEvent tankFireEvent = new TankFireEvent(this);
+        for (TankFireObserver t : tankFireObservers) {
+            t.actionOnFire(tankFireEvent);
         }
     }
 

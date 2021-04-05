@@ -2,6 +2,7 @@ package com.anpo.tank.frame;
 
 import com.anpo.config.PropertyManager;
 import com.anpo.designPatterns.c04_facade_mediator.model.GameModel;
+import com.anpo.designPatterns.c07_observer.TankFireEvent;
 import com.anpo.tank.bean.Tank;
 import com.anpo.tank.enums.Direction;
 
@@ -117,8 +118,8 @@ public class TankFrame extends Frame {
                 bd = false;
             }
             if(keyCode == KeyEvent.VK_SPACE){
-                GameModel.getINSTANCE().myTank.fire();
-//                System.out.println("fire...");
+//                GameModel.getINSTANCE().myTank.fire();
+                GameModel.getINSTANCE().myTank.handlerFireKey();
             }
             setMainTankDirection();
         }
