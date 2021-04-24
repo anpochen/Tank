@@ -1,4 +1,4 @@
-package com.anpo.designPatterns.c06_Decorator;
+package com.anpo.designPatterns.c06_decorator;
 
 import com.anpo.tank.bean.GameObject;
 

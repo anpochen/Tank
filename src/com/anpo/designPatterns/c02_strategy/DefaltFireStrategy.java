@@ -1,8 +1,8 @@
 package com.anpo.designPatterns.c02_strategy;
 
 import com.anpo.designPatterns.c04_facade_mediator.model.GameModel;
-import com.anpo.designPatterns.c06_Decorator.RectangleDecorator;
-import com.anpo.designPatterns.c06_Decorator.TailDecorator;
+import com.anpo.designPatterns.c06_decorator.RectangleDecorator;
+import com.anpo.designPatterns.c06_decorator.TailDecorator;
 import com.anpo.resource.Audio;
 import com.anpo.tank.bean.Bullet;
 import com.anpo.tank.bean.Tank;

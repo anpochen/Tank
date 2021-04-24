@@ -1,8 +1,6 @@
-package com.anpo.designPatterns.c06_Decorator;
+package com.anpo.designPatterns.c06_decorator;
 
-import com.anpo.designPatterns.c05_chainOfResponsibility.Collider;
 import com.anpo.tank.bean.GameObject;
-import com.anpo.tank.enums.Direction;
 
 import java.awt.*;
 

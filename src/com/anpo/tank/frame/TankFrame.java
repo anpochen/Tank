@@ -20,7 +20,7 @@ public class TankFrame extends Frame {
         setTitle("tank war");
         setVisible(true);
 
-        addKeyListener(new MikeyListener());
+        addKeyListener(new MykeyListener());
 
         addWindowListener(new WindowAdapter() {
             @Override
@@ -53,7 +53,7 @@ public class TankFrame extends Frame {
         g.drawImage(offScreenImage, 0, 0, null);
     }
 
-    class MikeyListener extends KeyAdapter {
+    class MykeyListener extends KeyAdapter {
 
         boolean bl = false;
         boolean br = false;
@@ -63,8 +63,8 @@ public class TankFrame extends Frame {
         @Override
         public void keyPressed(KeyEvent e) {
             int keyCode = e.getKeyCode();
-            /**
-             * 一次只能一个方向
+            /*
+              一次只能一个方向
              */
             /*switch (keyCode){
                 case KeyEvent.VK_LEFT:
@@ -82,8 +82,8 @@ public class TankFrame extends Frame {
                 default:
                     break;
             }*/
-            /**
-             * 尝试斜着走，未成功
+            /*
+              尝试斜着走，未成功
              */
             if(keyCode == KeyEvent.VK_LEFT){
                 bl = true;
@@ -96,6 +96,12 @@ public class TankFrame extends Frame {
             }
             if(keyCode == KeyEvent.VK_DOWN){
                 bd = true;
+            }
+            if (keyCode == KeyEvent.VK_S){
+                GameModel.getINSTANCE().save();
+            }
+            if (keyCode == KeyEvent.VK_L){
+                GameModel.getINSTANCE().load();
             }
             setMainTankDirection();
 

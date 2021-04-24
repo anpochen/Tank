@@ -8,6 +8,7 @@ import com.anpo.tank.enums.Direction;
 import com.anpo.tank.enums.Group;
 
 import java.awt.*;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -109,6 +110,46 @@ public class GameModel {
             }
         }
     }
+
+    public void save(){
+        File file = new File("H:\\workspace\\Tank\\tankdata.data");
+        ObjectOutputStream objectOutputStream = null;
+        try {
+            objectOutputStream = new ObjectOutputStream(new FileOutputStream(file));
+            objectOutputStream.writeObject(myTank);
+            objectOutputStream.writeObject(gameObjects);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            if (objectOutputStream != null ){
+                try {
+                    objectOutputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+    public void load(){
+        File file = new File("H:\\workspace\\Tank\\tankdata.data");
+        ObjectInputStream objectInputStream = null;
+        try {
+            objectInputStream = new ObjectInputStream(new FileInputStream(file));
+            myTank = (Tank) objectInputStream.readObject();
+            gameObjects = (List<GameObject>) objectInputStream.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            if (objectInputStream != null ){
+                try {
+                    objectInputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
 
     public static GameModel getINSTANCE() {
         return INSTANCE;
