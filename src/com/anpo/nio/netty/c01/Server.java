@@ -12,7 +12,7 @@ import io.netty.util.concurrent.GlobalEventExecutor;
 
 public class Server {
 
-    public static ChannelGroup clients = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+    public static ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 
     public static void main(String[] args) {
 
@@ -50,7 +50,7 @@ class ServerChildHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        Server.clients.add(ctx.channel());
+        Server.channels.add(ctx.channel());
     }
 
     @Override
@@ -62,7 +62,7 @@ class ServerChildHandler extends ChannelInboundHandlerAdapter {
         byteBuf.getBytes(byteBuf.readerIndex(),bytes);
         System.out.println(new String(bytes));
 
-        Server.clients.writeAndFlush(msg);
+        Server.channels.writeAndFlush(msg);
 
     }
 
