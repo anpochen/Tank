@@ -26,7 +26,6 @@ public class Server {
             ChannelFuture channelFuture = serverBootstrap.group(bossGroup,wokerGroup)
                     .channel(NioServerSocketChannel.class)
                     .childHandler(new ChannelInitializer<SocketChannel>() {
-
                         @Override
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
                             ChannelPipeline channelPipeline = socketChannel.pipeline();
@@ -43,33 +42,42 @@ public class Server {
             bossGroup.shutdownGracefully();
             wokerGroup.shutdownGracefully();
         }
-
     }
 }
 
 class ServerChildHandler extends ChannelInboundHandlerAdapter {
 
     @Override
-    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+    public void channelActive(ChannelHandlerContext ctx) {
         Server.clients.add(ctx.channel());
     }
 
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+    public void channelRead(ChannelHandlerContext ctx, Object msg) {
         ByteBuf byteBuf = null;
 
         byteBuf = (ByteBuf) msg;
         byte [] bytes = new byte[byteBuf.readableBytes()];
         byteBuf.getBytes(byteBuf.readerIndex(),bytes);
-        System.out.println(new String(bytes));
 
-        Server.clients.writeAndFlush(msg);
+        String msgAccepted = new String(bytes);
+        System.out.println(msgAccepted);
+
+        if("_bye_".equals(msgAccepted)){
+            System.out.println("客户端请求断开连接！");
+            Server.clients.remove(ctx.channel());
+            ctx.close();
+        }else {
+            Server.clients.writeAndFlush(msg);
+        }
 
     }
 
     @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         cause.printStackTrace();
+        //删除出现异常的通道
+        Server.clients.remove(ctx.channel());
         ctx.close();
     }
 }
