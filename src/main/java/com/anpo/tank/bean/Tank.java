@@ -3,6 +3,7 @@ package com.anpo.tank.bean;
 import com.anpo.config.PropertyManager;
 import com.anpo.designPatterns.strategy.DefaltFireStrategy;
 import com.anpo.designPatterns.strategy.FourDirectionFireStrategy;
+import com.anpo.net.msg.TankJoinMsg;
 import com.anpo.tank.enums.Direction;
 import com.anpo.resource.ResourceManager;
 import com.anpo.tank.enums.Group;
@@ -10,11 +11,13 @@ import com.anpo.tank.enums.Group;
 import java.awt.*;
 
 import java.util.Random;
+import java.util.UUID;
 
 public class Tank {
     public static final int WIDTH = ResourceManager.goodTankD.getWidth();
     public static final int HEIGHT = ResourceManager.goodTankD.getHeight();
 
+    private UUID uuid = UUID.randomUUID();
     private int x,y;
     private static final int SPEED = PropertyManager.getInt("tankSpeed");
     private Direction direction;
@@ -23,7 +26,7 @@ public class Tank {
 
     Rectangle rectangle = new Rectangle();
 
-    private Random random = new Random();
+    private final Random random = new Random();
 
     private boolean moving = true;
     private boolean alive = true;
@@ -34,6 +37,17 @@ public class Tank {
         this.direction = direction;
         this.group = group;
         this.tankFrame = tankFrame;
+
+        rectangle.setRect(x,y,WIDTH,HEIGHT);
+    }
+
+    public Tank(TankJoinMsg msg) {
+        this.x = msg.x;
+        this.y = msg.y;
+        this.direction = msg.direction;
+        this.moving = msg.isMoving();
+        this.group = msg.group;
+        this.uuid = msg.uuid;
 
         rectangle.setRect(x,y,WIDTH,HEIGHT);
     }
@@ -155,6 +169,14 @@ public class Tank {
 
     public void die() {
         this.alive = false;
+    }
+
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
     }
 
     public int getX() {

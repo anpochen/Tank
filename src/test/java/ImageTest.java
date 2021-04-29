@@ -1,5 +1,3 @@
-package com.anpo.test;
-
 import org.junit.Test;
 
 import javax.imageio.ImageIO;

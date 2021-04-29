@@ -1,4 +1,4 @@
-package com.anpo.netty;
+package com.anpo.net;
 
 import java.awt.*;
 import java.awt.event.WindowAdapter;

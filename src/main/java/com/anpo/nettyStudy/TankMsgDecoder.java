@@ -1,4 +1,4 @@
-package com.anpo.netty;
+package com.anpo.nettyStudy;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;

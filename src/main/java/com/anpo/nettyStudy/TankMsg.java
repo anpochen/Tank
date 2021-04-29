@@ -1,4 +1,4 @@
-package com.anpo.netty;
+package com.anpo.nettyStudy;
 
 public class TankMsg {
 

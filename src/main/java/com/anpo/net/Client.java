@@ -1,5 +1,11 @@
-package com.anpo.netty;
+package com.anpo.net;
 
+import com.anpo.net.msg.Msg;
+import com.anpo.net.msg.MsgDecoder;
+import com.anpo.net.msg.MsgEncoder;
+import com.anpo.net.msg.TankJoinMsg;
+import com.anpo.nettyStudy.TankMsg;
+import com.anpo.tank.bean.TankFrame;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -11,12 +17,10 @@ import io.netty.util.ReferenceCountUtil;
 
 public class Client {
 
-    Channel channel = null;
+    public static final Client INSTANCE = new Client();
+    private Channel channel = null;
 
-    public static void main(String[] args) throws InterruptedException {
-        Client client = new Client();
-        client.connect();
-    }
+    public Client() {}
 
     public void connect() {
         //线程池
@@ -36,7 +40,7 @@ public class Client {
                         System.out.println("not connected!");
                     }else {
                         System.out.println("connected!");
-
+                        //initialize the channel
                         channel = channelFuture.channel();
                     }
                 }
@@ -44,7 +48,7 @@ public class Client {
             channelFuture.sync();
             //System.out.println("......");
             channelFuture.channel().closeFuture().sync();
-
+            System.out.println("connection closed!");
         } catch (Exception e){
             e.printStackTrace();
         } finally{
@@ -52,13 +56,13 @@ public class Client {
         }
     }
 
-    public void send(String msg){
-        ByteBuf byteBuf = Unpooled.copiedBuffer(msg.getBytes());
-        channel.writeAndFlush(byteBuf);
+    public void send(Msg msg){
+        System.out.println("SEND:" + msg);
+        channel.writeAndFlush(msg);
     }
 
     public void closeConnection(){
-        this.send("_bye_");
+//        this.send("_bye_");
     }
 }
 
@@ -67,34 +71,24 @@ class ClientChannelInitializer extends ChannelInitializer<SocketChannel> {
     protected void initChannel(SocketChannel socketChannel) throws Exception {
         //System.out.println("socketChannel ==" + socketChannel);
         socketChannel.pipeline()
-                .addLast(new TankMsgEncoder())
+                .addLast(new MsgEncoder())
+                .addLast(new MsgDecoder())
                 .addLast(new ClientHandler());
     }
 }
 
-class ClientHandler extends ChannelInboundHandlerAdapter {
+class ClientHandler extends SimpleChannelInboundHandler<Msg> {
+
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
 //        ByteBuf byteBuf = Unpooled.copiedBuffer("Hello".getBytes());
 
-        ctx.writeAndFlush(new TankMsg(5,8));
+        ctx.writeAndFlush(new TankJoinMsg(TankFrame.INSTANCE.getMyTank()));
     }
 
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        ByteBuf byteBuf = null;
-
-        try {
-            byteBuf = (ByteBuf) msg;
-
-            byte [] bytes = new byte [byteBuf.readableBytes()];
-            byteBuf.getBytes(byteBuf.readerIndex(),bytes);
-            String msgAccept = new String(bytes);
-            System.out.println(msgAccept);
-        }finally {
-            if (byteBuf != null ){
-                ReferenceCountUtil.release(byteBuf);
-            }
-        }
+    protected void channelRead0(ChannelHandlerContext channelHandlerContext, Msg msg) throws Exception {
+        System.out.println(msg.getMsgType()+ "===" + msg);
+        msg.handle();
     }
 }

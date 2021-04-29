@@ -6,19 +6,28 @@ import com.anpo.tank.enums.Group;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
 
 public class TankFrame extends Frame {
 
+    public static final TankFrame INSTANCE = new TankFrame();
+
     public static final int GAME_WIDTH = PropertyManager.getInt("gameWidth");
     public static final int GAME_HEIGHT = PropertyManager.getInt("gameHeight");
+//网络版不需要
+//    public List<Tank> tanks = new ArrayList<>();
 
-    public List<Tank> tanks = new ArrayList<>();
+    public Map<UUID,Tank> tanks = new HashMap<>();
     public List<Bullet> bullets = new ArrayList<>();
     public List<Explode> explodes = new ArrayList<>();
 
-    Tank myTank = new Tank(200,200, Direction.DOWN, Group.GOOD,this);
+
+    public Tank getMyTank() {
+        return myTank;
+    }
+
+    private Tank myTank = new Tank(200,200, Direction.DOWN, Group.GOOD,this);
 //    Bullet bullet = new Bullet(200,200,Direction.DOWN,this);
 
     public TankFrame() throws HeadlessException {
@@ -223,5 +232,13 @@ public class TankFrame extends Frame {
 
 //            new Thread(()->new Audio("com/anpo/resource/audio/tank_move.wav").play()).start();
         }
+    }
+
+    public Tank findTankByUUID(UUID id) {
+        return tanks.get(id);
+    }
+
+    public void addTank(Tank t) {
+        tanks.put(t.getUuid(), t);
     }
 }
