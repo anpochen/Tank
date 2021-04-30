@@ -14,6 +14,7 @@ import java.util.Random;
 import java.util.UUID;
 
 public class Tank {
+
     public static final int WIDTH = ResourceManager.goodTankD.getWidth();
     public static final int HEIGHT = ResourceManager.goodTankD.getHeight();
 

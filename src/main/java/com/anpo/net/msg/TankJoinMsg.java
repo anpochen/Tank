@@ -6,6 +6,7 @@ import com.anpo.tank.bean.TankFrame;
 import com.anpo.tank.enums.Direction;
 import com.anpo.tank.enums.Group;
 
+import java.io.*;
 import java.util.UUID;
 
 public class TankJoinMsg extends Msg{
@@ -48,16 +49,85 @@ public class TankJoinMsg extends Msg{
         TankFrame.INSTANCE.addTank(tank);
 
         Client.INSTANCE.send(new TankJoinMsg(TankFrame.INSTANCE.getMyTank()));
-
     }
 
     @Override
     public byte[] toBytes() {
-        return new byte[0];
+
+        ByteArrayOutputStream byteArrayOutputStream = null;
+        DataOutputStream dataOutputStream = null;
+        byte [] bytes = null;
+
+        try {
+            byteArrayOutputStream = new ByteArrayOutputStream();
+            dataOutputStream = new DataOutputStream(byteArrayOutputStream);
+
+            dataOutputStream.writeLong(uuid.getMostSignificantBits());
+            dataOutputStream.writeLong(uuid.getLeastSignificantBits());
+            dataOutputStream.writeInt(x);
+            dataOutputStream.writeInt(y);
+            dataOutputStream.writeInt(direction.ordinal());
+            dataOutputStream.writeBoolean(moving);
+            dataOutputStream.writeInt(group.ordinal());
+
+            dataOutputStream.flush();
+            bytes = byteArrayOutputStream.toByteArray();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (byteArrayOutputStream != null){
+                try {
+                    byteArrayOutputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (dataOutputStream != null) {
+                try {
+                    dataOutputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return bytes;
     }
 
     @Override
     public void parse(byte[] bytes) {
+        ByteArrayInputStream byteArrayInputStream = null;
+        DataInputStream dataInputStream = null;
+
+        try {
+            byteArrayInputStream = new ByteArrayInputStream(bytes);
+            dataInputStream = new DataInputStream(byteArrayInputStream);
+
+            this.uuid = new UUID(dataInputStream.readLong(),dataInputStream.readLong());
+            this.x = dataInputStream.readInt();
+            this.y = dataInputStream.readInt();
+            this.direction = Direction.values()[dataInputStream.readInt()];
+            this.moving = dataInputStream.readBoolean();
+            this.group = Group.values()[dataInputStream.readInt()];
+
+        } catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            if (dataInputStream != null ){
+                try {
+                    dataInputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (byteArrayInputStream != null){
+                try {
+                    byteArrayInputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
 
     }
 
@@ -112,5 +182,17 @@ public class TankJoinMsg extends Msg{
 
     public void setGroup(Group group) {
         this.group = group;
+    }
+
+    @Override
+    public String toString() {
+        return "TankJoinMsg{" +
+                "uuid=" + uuid +
+                ", x=" + x +
+                ", y=" + y +
+                ", direction=" + direction +
+                ", moving=" + moving +
+                ", group=" + group +
+                '}';
     }
 }

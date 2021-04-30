@@ -22,23 +22,23 @@ public class ResourceManager {
 
     static {
         try {
-            goodTankU = ImageIO.read(Objects.requireNonNull(ResourceManager.class.getClassLoader().getResourceAsStream("com/anpo/resource/images/GoodTank1.png")));
+            goodTankU = ImageIO.read(Objects.requireNonNull(ResourceManager.class.getClassLoader().getResourceAsStream("images/GoodTank1.png")));
             goodTankR = ImageUtils.rotateImage(goodTankU,90);
             goodTankL = ImageUtils.rotateImage(goodTankU,-90);
             goodTankD = ImageUtils.rotateImage(goodTankU,180);
 
-            badTankU = ImageIO.read(Objects.requireNonNull(ResourceManager.class.getClassLoader().getResourceAsStream("com/anpo/resource/images/BadTank1.png")));
+            badTankU = ImageIO.read(Objects.requireNonNull(ResourceManager.class.getClassLoader().getResourceAsStream("images/BadTank1.png")));
             badTankR = ImageUtils.rotateImage(badTankU,90);
             badTankL = ImageUtils.rotateImage(badTankU,-90);
             badTankD = ImageUtils.rotateImage(badTankU,180);
 
-            bulletU = ImageIO.read(Objects.requireNonNull(ResourceManager.class.getClassLoader().getResourceAsStream("com/anpo/resource/images/bulletU.png")));
+            bulletU = ImageIO.read(Objects.requireNonNull(ResourceManager.class.getClassLoader().getResourceAsStream("images/bulletU.png")));
             bulletR = ImageUtils.rotateImage(bulletU,90);
             bulletL = ImageUtils.rotateImage(bulletU,-90);
             bulletD = ImageUtils.rotateImage(bulletU,180);
 
             for (int i = 0; i < explodes.length; i++) {
-                explodes[i] = ImageIO.read(Objects.requireNonNull(ResourceManager.class.getClassLoader().getResourceAsStream("com/anpo/resource/images/e"+ (i+1) + ".gif")));
+                explodes[i] = ImageIO.read(Objects.requireNonNull(ResourceManager.class.getClassLoader().getResourceAsStream("images/e" + (i+1) + ".gif")));
             }
         } catch (IOException e) {
             e.printStackTrace();

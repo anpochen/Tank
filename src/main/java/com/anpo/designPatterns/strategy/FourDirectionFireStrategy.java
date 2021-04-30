@@ -26,7 +26,7 @@ public class FourDirectionFireStrategy implements FireStrategy{
             new Bullet(bulletX, bulletY, direction, tank.getGroup(), tank.getTankFrame());
         }
         if (tank.getGroup() == Group.GOOD){
-            new Thread(()->new Audio("com/anpo/resource/audio/tank_fire.wav").play()).start();
+            new Thread(()->new Audio("audio/tank_fire.wav").play()).start();
         }
     }
 }

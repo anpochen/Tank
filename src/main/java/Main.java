@@ -10,7 +10,7 @@ import java.util.Objects;
 public class Main {
 
     public static void main(String[] args) {
-        TankFrame tankFrame = new TankFrame();
+        TankFrame tankFrame = TankFrame.INSTANCE;
         tankFrame.setVisible(true);
         
         //初始化敌方坦克  网络版不需要

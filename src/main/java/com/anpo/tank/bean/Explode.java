@@ -19,7 +19,7 @@ public class Explode {
         this.tankFrame = tankFrame;
 
         new Thread(()->{
-            new Audio("com/anpo/resource/audio/explode.wav").play();
+            new Audio("audio/explode.wav").play();
         });
 
     }

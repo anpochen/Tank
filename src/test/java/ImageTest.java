@@ -23,7 +23,7 @@ public class ImageTest {
             BufferedImage image = ImageIO.read(new File("H:\\GitHub\\tank\\tank\\src\\images\\BadTank1.png"));
             assertNotNull(image);
 
-            BufferedImage image1 = ImageIO.read(Objects.requireNonNull(ImageTest.class.getClassLoader().getResourceAsStream("com/anpo/resource/images/BadTank1.png")));
+            BufferedImage image1 = ImageIO.read(Objects.requireNonNull(ImageTest.class.getClassLoader().getResourceAsStream("images/BadTank1.png")));
             assertNotNull(image);
         } catch (IOException e) {
             e.printStackTrace();

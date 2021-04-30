@@ -22,7 +22,7 @@ public class DefaltFireStrategy implements FireStrategy{
         int bulletY = tank.getY() + Tank.HEIGHT/2 - Bullet.HEIGHT/2;
         new Bullet(bulletX,bulletY,tank.getDirection(),tank.getGroup(),tank.getTankFrame());
         if (tank.getGroup() == Group.GOOD){
-            new Thread(()->new Audio("com/anpo/resource/audio/tank_fire.wav").play()).start();
+            new Thread(()->new Audio("audio/tank_fire.wav").play()).start();
         }
     }
 }
