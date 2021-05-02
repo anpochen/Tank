@@ -30,7 +30,8 @@ public class MsgDecoder extends ByteToMessageDecoder {
         byteBuf.readBytes(bytes);
         Msg msg = null;
 
-        switch (msgType){
+        //可以用反射简化代码
+        /*switch (msgType){
             case TankJoinMsg:
                 msg = new TankJoinMsg();
                 break;
@@ -46,13 +47,14 @@ public class MsgDecoder extends ByteToMessageDecoder {
             case TankNewBulletMsg:
                 msg = new TankNewBulletMsg();
                 break;
-            /*case TankDieMsg:
+            case TankDieMsg:
                 msg = new TankDieMsg();
                 break;
-            */
             default:
                 break;
-        }
+        }*/
+        msg = (Msg) Class.forName("com.anpo.net.msg." + msgType.toString()).getDeclaredConstructor().newInstance();
+
         msg.parse(bytes);
 
         list.add(msg);

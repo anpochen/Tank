@@ -27,7 +27,7 @@ public class Explode {
     public void paint(Graphics g){
         g.drawImage(ResourceManager.explodes[step++],x,y,null);
         if(step >= ResourceManager.explodes.length){
-            tankFrame.explodes.remove(this);
+            TankFrame.INSTANCE.explodes.remove(this);
             step =0;
         }
     }

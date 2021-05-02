@@ -1,6 +1,8 @@
 package com.anpo.tank.bean;
 
 import com.anpo.config.PropertyManager;
+import com.anpo.net.Client;
+import com.anpo.net.msg.TankDieMsg;
 import com.anpo.tank.enums.Direction;
 import com.anpo.resource.ResourceManager;
 import com.anpo.tank.enums.Group;
@@ -97,26 +99,41 @@ public class Bullet {
     }
 
     public void collidedWith(Tank tank) {
-        //如果都是同一组的，那么直接返回
-        if(this.group.equals(tank.getGroup())){
+        //如果都是同一组的，那么直接返回  单机版
+        /*if(this.group.equals(tank.getGroup())){
+            return;
+        }*/
+        //如果是自己发射的子弹，直接返回 网络版
+        if(this.tankUuid.equals(tank.getUuid())){
             return;
         }
 
         /*//这里每次碰撞检测时都要新建一个矩形对象，垃圾太多，放到对象中
         Rectangle rectangle1 = new Rectangle(x,y,WIDTH,HEIGHT);
         Rectangle rectangle2 = new Rectangle(tank.getX(), tank.getY(), Tank.WIDTH, Tank.HEIGHT);*/
-        if(this.rectangle.intersects(tank.rectangle)){
+        /*
+        单机版
+         */
+        /*if(this.rectangle.intersects(tank.rectangle)){
             tank.die();
             this.die();
             int eX = tank.getX() + Tank.WIDTH/2 - Explode.WIDTH/2;
             int eY = tank.getY() + Tank.HEIGHT/2 - Explode.HEIGHT/2;
             tankFrame.explodes.add(new Explode(eX, eY,tankFrame));
 
-        }
+        }*/
 
+        /*
+        网络版
+         */
+        if(this.alive && tank.isAlive() && this.rectangle.intersects(tank.rectangle)){
+            this.die();
+            tank.die();
+            Client.INSTANCE.send(new TankDieMsg(tank.getUuid(),this.uuid));
+        }
     }
 
-    private void die() {
+    public void die() {
         this.alive = false;
     }
 

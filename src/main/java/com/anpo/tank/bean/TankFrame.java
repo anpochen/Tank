@@ -63,23 +63,22 @@ public class TankFrame extends Frame {
 
         myTank.paint(g);
 //        bullet.paint(g);
-        /**
-         * 第一种，这种普通的遍历，同时在子弹类的paint方法中删除元素不会报错
+        /*
+          第一种，这种普通的遍历，同时在子弹类的paint方法中删除元素不会报错
          */
         for (int i = 0; i<bullets.size();i++){
-            Bullet bullet = bullets.get(i);
-            bullet.paint(g);
+            bullets.get(i).paint(g);
         }
 
-        /**
-         * 这种写法在需要同时删除bullets中的元素时会报错
+        /*
+          这种写法在需要同时删除bullets中的元素时会报错
          */
         /*for (Bullet bullet: bullets) {
             bullet.paint(g);
         }*/
 
-        /**
-         * 第二种，使用Iterator，只能在这里删除无效的子弹
+        /*
+          第二种，使用Iterator，只能在这里删除无效的子弹
          */
         /*Iterator<Bullet> iterator = bullets.iterator();
         for (;iterator.hasNext();){
@@ -92,8 +91,8 @@ public class TankFrame extends Frame {
             bullet.paint(g);
         }*/
 
-        /**
-         * 显示敌方坦克  单机版
+        /*
+          显示敌方坦克  单机版
          */
 //        for (int i = 0; i < tanks.size(); i++) {
 //            tanks.get(i).paint(g);
@@ -110,13 +109,13 @@ public class TankFrame extends Frame {
             explodes.get(i).paint(g);
         }
 
-        //显示所有坦克  网络版
-//        tanks.values().stream().forEach((e)->paint(g));
+        //显示所有坦克  网络版  流式
+        tanks.values().stream().forEach((e)->e.paint(g));
 
-        for (Map.Entry<UUID,Tank> entry: tanks.entrySet()) {
-            Tank tank = entry.getValue();
-            tank.paint(g);
-        }
+        //普通循环
+        /*for (Map.Entry<UUID,Tank> entry: tanks.entrySet()) {
+            entry.getValue().paint(g);
+        }*/
 
         //碰撞检测  网络版
         Collection<Tank> tankCollection = tanks.values();
@@ -236,8 +235,10 @@ public class TankFrame extends Frame {
         private void setMainTankDirection() {
 
             if(!bl && !br && !bu && !bd){
+                if (myTank.isMoving()){
+                    Client.INSTANCE.send(new TankStopMovingMsg(getMyTank()));
+                }
                 myTank.setMoving(false);
-                Client.INSTANCE.send(new TankStopMovingMsg(getMyTank()));
             }else{
                 Direction direction = myTank.getDirection();
 
@@ -279,5 +280,14 @@ public class TankFrame extends Frame {
 
     public void addBullet(Bullet bullet) {
         bullets.add(bullet);
+    }
+
+    public Bullet findBulletByUUID(UUID id) {
+        for (int i = 0; i < bullets.size(); i++) {
+            if (bullets.get(i).getUuid().equals(id)){
+                return bullets.get(i);
+            }
+        }
+        return null;
     }
 }

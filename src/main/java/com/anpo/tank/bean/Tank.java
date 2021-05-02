@@ -57,6 +57,15 @@ public class Tank {
         /*if (!alive){
             tankFrame.tanks.remove(this);
         }*/
+        //draw a rect if dead!
+        if(!alive) {
+            moving = false;
+            Color cc = g.getColor();
+            g.setColor(Color.WHITE);
+            g.drawRect(x, y, WIDTH, HEIGHT);
+            g.setColor(cc);
+            return;
+        }
 
         /*Color color = g.getColor();
         g.setColor(Color.GREEN);
@@ -161,6 +170,9 @@ public class Tank {
     }
 
     public void fire() {
+        if (!alive){
+            return;
+        }
         if (this.group == Group.BAD){
             DefaltFireStrategy.getInstance().fire(this);
         }else {
@@ -170,6 +182,10 @@ public class Tank {
 
     public void die() {
         this.alive = false;
+
+        int eX = this.getX() + Tank.WIDTH/2 - Explode.WIDTH/2;
+        int eY = this.getY() + Tank.HEIGHT/2 - Explode.HEIGHT/2;
+        TankFrame.INSTANCE.explodes.add(new Explode(eX, eY, tankFrame));
     }
 
     public UUID getUuid() {
@@ -222,6 +238,14 @@ public class Tank {
 
     public void setGroup(Group group) {
         this.group = group;
+    }
+
+    public boolean isAlive() {
+        return alive;
+    }
+
+    public void setAlive(boolean alive) {
+        this.alive = alive;
     }
 
     public TankFrame getTankFrame() {
