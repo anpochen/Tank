@@ -6,30 +6,36 @@ import com.anpo.resource.ResourceManager;
 import com.anpo.tank.enums.Group;
 
 import java.awt.*;
+import java.util.UUID;
 
 public class Bullet {
     private static final int SPEED = PropertyManager.getInt("bulletSpeed");
     public static final int WIDTH = ResourceManager.bulletD.getWidth();
     public static final int HEIGHT = ResourceManager.bulletD.getHeight();
 
+    private UUID uuid = UUID.randomUUID();;
     private int x,y;
     private Direction direction;
     private Group group;
+    private UUID tankUuid;
+
     private TankFrame tankFrame;
 
     Rectangle rectangle = new Rectangle();
 
     private boolean alive = true;
 
-    public Bullet(int x, int y, Direction direction,Group group,TankFrame tankFrame) {
+    public Bullet(int x, int y, Direction direction,Group group, UUID tankUuid, TankFrame tankFrame) {
         this.x = x;
         this.y = y;
         this.direction = direction;
         this.group = group;
+        this.tankUuid = tankUuid;
         this.tankFrame = tankFrame;
 
         rectangle.setRect(x,y,WIDTH,HEIGHT);
 
+        //这里和添加网络版那里只能有一个地方加
         tankFrame.bullets.add(this);
     }
     
@@ -114,6 +120,14 @@ public class Bullet {
         this.alive = false;
     }
 
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
+    }
+
     public int getX() {
         return x;
     }
@@ -152,5 +166,13 @@ public class Bullet {
 
     public void setGroup(Group group) {
         this.group = group;
+    }
+
+    public UUID getTankUuid() {
+        return tankUuid;
+    }
+
+    public void setTankUuid(UUID tankUuid) {
+        this.tankUuid = tankUuid;
     }
 }

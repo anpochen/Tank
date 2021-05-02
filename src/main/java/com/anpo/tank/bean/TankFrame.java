@@ -32,7 +32,8 @@ public class TankFrame extends Frame {
         return myTank;
     }
 
-    private Tank myTank = new Tank((random.nextInt(GAME_WIDTH)),random.nextInt(GAME_HEIGHT), Direction.DOWN, Group.GOOD,this);
+    Direction direction = Direction.values()[random.nextInt(Direction.values().length)];
+    private Tank myTank = new Tank((random.nextInt(GAME_WIDTH)),random.nextInt(GAME_HEIGHT), direction, Group.GOOD,this);
 //    Bullet bullet = new Bullet(200,200,Direction.DOWN,this);
 
     public TankFrame() throws HeadlessException {
@@ -274,5 +275,9 @@ public class TankFrame extends Frame {
 
     public void addTank(Tank t) {
         tanks.put(t.getUuid(), t);
+    }
+
+    public void addBullet(Bullet bullet) {
+        bullets.add(bullet);
     }
 }

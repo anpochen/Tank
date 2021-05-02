@@ -154,7 +154,7 @@ public class TankStopMovingMsg extends Msg{
 
     @Override
     public String toString() {
-        return "TankJoinMsg{" +
+        return "TankStopMovingMsg{" +
                 "uuid=" + uuid +
                 ", x=" + x +
                 ", y=" + y +

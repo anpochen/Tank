@@ -168,7 +168,7 @@ public class TankDirectionChangeMsg extends Msg{
 
     @Override
     public String toString() {
-        return "TankJoinMsg{" +
+        return "TankDirectionChangeMsg{" +
                 "uuid=" + uuid +
                 ", x=" + x +
                 ", y=" + y +

@@ -2,6 +2,7 @@ package com.anpo.net.msg;
 
 import com.anpo.net.Client;
 import com.anpo.net.enums.MsgType;
+import com.anpo.tank.bean.Bullet;
 import com.anpo.tank.bean.Tank;
 import com.anpo.tank.bean.TankFrame;
 import com.anpo.tank.enums.Direction;
@@ -10,42 +11,44 @@ import com.anpo.tank.enums.Group;
 import java.io.*;
 import java.util.UUID;
 
-public class TankStartMovingMsg extends Msg{
+public class TankNewBulletMsg extends Msg{
 
+    public UUID tankUuid;
     public UUID uuid;
     public int x,y;
     public Direction direction;
+    public Group group;
 
-    public TankStartMovingMsg(Tank tank) {
-        this.uuid = tank.getUuid();
-        this.x = tank.getX();
-        this.y = tank.getY();
-        this.direction = tank.getDirection();
+    public TankNewBulletMsg(Bullet bullet) {
+        this.uuid = bullet.getUuid();
+        this.x = bullet.getX();
+        this.y = bullet.getY();
+        this.direction = bullet.getDirection();
+        this.group = bullet.getGroup();
+        this.tankUuid = bullet.getTankUuid();
     }
 
-    public TankStartMovingMsg(UUID id, int x, int y, Direction direction) {
+    public TankNewBulletMsg(UUID id, int x, int y, Direction direction, Group group, UUID tankUuid) {
         this.uuid = id;
         this.x = x;
         this.y = y;
         this.direction = direction;
+        this.group = group;
+        this.tankUuid = tankUuid;
     }
 
-    public TankStartMovingMsg() {}
+    public TankNewBulletMsg() {}
 
     @Override
     public void handle() {
-        //如果是自己发的消息，就不处理
-        if(this.uuid.equals(TankFrame.INSTANCE.getMyTank().getUuid())){
+        //如果是自己发射子弹发的消息，就不处理
+        if(this.tankUuid.equals(TankFrame.INSTANCE.getMyTank().getUuid())){
             return;
         }
-
-        Tank tank = TankFrame.INSTANCE.findTankByUUID(uuid);
-        if(tank != null ){
-            tank.setMoving(true);
-            tank.setDirection(this.direction);
-            tank.setX(this.x);
-            tank.setY(this.y);
-        }
+        //添加其他人发射的子弹
+        Bullet bullet = new Bullet(x, y, direction, group, tankUuid, TankFrame.INSTANCE);
+        bullet.setUuid(this.uuid);
+//        TankFrame.INSTANCE.addBullet(bullet);
     }
 
     /*
@@ -67,6 +70,9 @@ public class TankStartMovingMsg extends Msg{
             dataOutputStream.writeInt(x);
             dataOutputStream.writeInt(y);
             dataOutputStream.writeInt(direction.ordinal());
+            dataOutputStream.writeInt(group.ordinal());
+            dataOutputStream.writeLong(tankUuid.getMostSignificantBits());
+            dataOutputStream.writeLong(tankUuid.getLeastSignificantBits());
 
             dataOutputStream.flush();
             bytes = byteArrayOutputStream.toByteArray();
@@ -108,6 +114,8 @@ public class TankStartMovingMsg extends Msg{
             this.x = dataInputStream.readInt();
             this.y = dataInputStream.readInt();
             this.direction = Direction.values()[dataInputStream.readInt()];
+            this.group = Group.values()[dataInputStream.readInt()];
+            this.tankUuid = new UUID(dataInputStream.readLong(),dataInputStream.readLong());
 
         } catch (Exception e){
             e.printStackTrace();
@@ -132,7 +140,7 @@ public class TankStartMovingMsg extends Msg{
 
     @Override
     public MsgType getMsgType() {
-        return MsgType.TankStartMovingMsg;
+        return MsgType.TankNewBulletMsg;
     }
 
     public UUID getId() {
@@ -167,13 +175,31 @@ public class TankStartMovingMsg extends Msg{
         this.direction = direction;
     }
 
+    public Group getGroup() {
+        return group;
+    }
+
+    public void setGroup(Group group) {
+        this.group = group;
+    }
+
+    public UUID getTankUuid() {
+        return tankUuid;
+    }
+
+    public void setTankUuid(UUID tankUuid) {
+        this.tankUuid = tankUuid;
+    }
+
     @Override
     public String toString() {
-        return "TankStartMovingMsg{" +
-                "uuid=" + uuid +
+        return "TankNewBulletMsg{" +
+                "tankUuid=" + tankUuid +
+                ", uuid=" + uuid +
                 ", x=" + x +
                 ", y=" + y +
                 ", direction=" + direction +
+                ", group=" + group +
                 '}';
     }
 }
