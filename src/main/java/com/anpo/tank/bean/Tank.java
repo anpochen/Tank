@@ -54,9 +54,9 @@ public class Tank {
     }
 
     public void paint(Graphics g) {
-        if (!alive){
+        /*if (!alive){
             tankFrame.tanks.remove(this);
-        }
+        }*/
 
         /*Color color = g.getColor();
         g.setColor(Color.GREEN);

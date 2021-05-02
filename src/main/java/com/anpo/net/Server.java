@@ -1,6 +1,7 @@
 package com.anpo.net;
 
 import com.anpo.net.msg.MsgDecoder;
+import com.anpo.net.msg.MsgEncoder;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.group.ChannelGroup;
@@ -31,6 +32,7 @@ public class Server {
                             ChannelPipeline channelPipeline = socketChannel.pipeline();
                             channelPipeline
                                     .addLast(new MsgDecoder())
+                                    .addLast(new MsgEncoder())
                                     .addLast(new ServerChildHandler());
                         }
                     }).bind(8888).sync();
@@ -52,15 +54,17 @@ class ServerChildHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
+        ServerFrame.INSTANCE.leftTextArea.setText(ServerFrame.INSTANCE.leftTextArea.getText() + System.getProperty("line.separator") + "tank joined!");
         Server.clients.add(ctx.channel());
-
     }
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
 
-        com.anpo.nettyStudy.ServerFrame.INSTANCE.updateServerMsg(msg.toString());
+        ServerFrame.INSTANCE.updateServerMsg(msg.toString());
         ServerFrame.INSTANCE.updateClientMsg(msg.toString());
+
+        Server.clients.writeAndFlush(msg);
 
         ReferenceCountUtil.release(msg);
 //        ByteBuf byteBuf = null;

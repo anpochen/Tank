@@ -1,6 +1,5 @@
 package com.anpo.net.msg;
 
-import com.anpo.nettyStudy.TankMsg;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
@@ -14,9 +13,43 @@ public class MsgDecoder extends ByteToMessageDecoder {
             return;
         }
 
-        int x = byteBuf.readInt();
-        int y = byteBuf.readInt();
+        byteBuf.markReaderIndex();
 
-        list.add(new TankMsg(x,y));
+        //消息类型
+        MsgType msgType = MsgType.values()[byteBuf.readInt()];
+        //这个消息的长度
+        int length = byteBuf.readInt();
+
+        if(byteBuf.readableBytes() < length){
+            byteBuf.resetReaderIndex();
+            return;
+        }
+
+        byte [] bytes = new byte[length];
+        byteBuf.readBytes(bytes);
+        Msg msg = null;
+
+        switch (msgType){
+            case TankJoinMsg:
+                msg = new TankJoinMsg();
+                break;
+            /*case TankDieMsg:
+                msg = new TankDieMsg();
+                break;
+            case TankMovingMsg:
+                msg = new TankMovingMsg();
+                break;
+            case TankStopMsg:
+                msg = new TankStopMsg();
+                break;
+            case TankNewBulletMsg:
+                msg = new TankNewBulletMsg();
+                break;*/
+            default:
+                break;
+        }
+        msg.parse(bytes);
+
+        list.add(msg);
     }
 }

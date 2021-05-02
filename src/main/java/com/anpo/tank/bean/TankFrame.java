@@ -11,32 +11,33 @@ import java.util.List;
 
 public class TankFrame extends Frame {
 
-    public static final TankFrame INSTANCE = new TankFrame();
-
     public static final int GAME_WIDTH = PropertyManager.getInt("gameWidth");
     public static final int GAME_HEIGHT = PropertyManager.getInt("gameHeight");
-//网络版不需要
-//    public List<Tank> tanks = new ArrayList<>();
+
+    public static final TankFrame INSTANCE = new TankFrame();
+    //网络版不需要
+    //public List<Tank> tanks = new ArrayList<>();
 
     public Map<UUID,Tank> tanks = new HashMap<>();
     public List<Bullet> bullets = new ArrayList<>();
     public List<Explode> explodes = new ArrayList<>();
 
+    Random random = new Random();
 
     public Tank getMyTank() {
         return myTank;
     }
 
-    private Tank myTank = new Tank(200,200, Direction.DOWN, Group.GOOD,this);
+    private Tank myTank = new Tank((random.nextInt(GAME_WIDTH)),random.nextInt(GAME_HEIGHT), Direction.DOWN, Group.GOOD,this);
 //    Bullet bullet = new Bullet(200,200,Direction.DOWN,this);
 
     public TankFrame() throws HeadlessException {
         setSize(GAME_WIDTH,GAME_HEIGHT);
         setResizable(false);
         setTitle("tank war");
-        setVisible(true);
+        //setVisible(true);
 
-        addKeyListener(new MikeyListener());
+        addKeyListener(new MykeyListener());
 
         addWindowListener(new WindowAdapter() {
             @Override
@@ -50,8 +51,9 @@ public class TankFrame extends Frame {
     public void paint(Graphics g) {
         Color color = g.getColor();
         g.setColor(Color.GREEN);
-        g.drawString("敌方坦克的数量："+ tanks.size(),10, 60);
+        g.drawString("敌人坦克的数量："+ tanks.size(),10, 60);
         g.drawString("子弹的数量："+ bullets.size(),10, 80);
+        g.drawString("爆炸的数量："+ explodes.size(),10, 100);
         g.setColor(color);
 
         myTank.paint(g);
@@ -86,21 +88,37 @@ public class TankFrame extends Frame {
         }*/
 
         /**
-         * 显示敌方坦克
+         * 显示敌方坦克  单机版
          */
-        for (int i = 0; i < tanks.size(); i++) {
-            tanks.get(i).paint(g);
-        }
+//        for (int i = 0; i < tanks.size(); i++) {
+//            tanks.get(i).paint(g);
+//        }
 
-        //碰撞检测
-        for (int i = 0; i < bullets.size(); i++) {
+        //碰撞检测  单机版
+       /* for (int i = 0; i < bullets.size(); i++) {
             for (int j = 0; j < tanks.size(); j++) {
                 bullets.get(i).collidedWith(tanks.get(j));
             }
-        }
+        }*/
 
         for (int i = 0; i < explodes.size(); i++) {
             explodes.get(i).paint(g);
+        }
+
+        //显示所有坦克  网络版
+//        tanks.values().stream().forEach((e)->paint(g));
+
+        for (Map.Entry<UUID,Tank> entry: tanks.entrySet()) {
+            Tank tank = entry.getValue();
+            tank.paint(g);
+        }
+
+        //碰撞检测  网络版
+        Collection<Tank> tankCollection = tanks.values();
+        for (int i = 0; i < bullets.size(); i++) {
+            for (Tank t: tankCollection) {
+                bullets.get(i).collidedWith(t);
+            }
         }
     }
 
@@ -122,7 +140,7 @@ public class TankFrame extends Frame {
         g.drawImage(offScreenImage, 0, 0, null);
     }
 
-    class MikeyListener extends KeyAdapter {
+    class MykeyListener extends KeyAdapter {
 
         boolean bl = false;
         boolean br = false;

@@ -45,12 +45,17 @@ public class TankJoinMsg extends Msg{
                 TankFrame.INSTANCE.findTankByUUID(this.uuid) != null ){
             return;
         }
+        //添加别人的坦克
         Tank tank = new Tank(this);
         TankFrame.INSTANCE.addTank(tank);
 
+        //把自己坦克的信息发送给新加入的这个客户端
         Client.INSTANCE.send(new TankJoinMsg(TankFrame.INSTANCE.getMyTank()));
     }
 
+    /*
+    将这个消息转成字节数组
+     */
     @Override
     public byte[] toBytes() {
 
@@ -94,6 +99,9 @@ public class TankJoinMsg extends Msg{
         return bytes;
     }
 
+    /*
+    将传进来的字节数组转成消息实体
+     */
     @Override
     public void parse(byte[] bytes) {
         ByteArrayInputStream byteArrayInputStream = null;
@@ -133,7 +141,7 @@ public class TankJoinMsg extends Msg{
 
     @Override
     public MsgType getMsgType() {
-        return null;
+        return MsgType.TankJoinMsg;
     }
 
     public UUID getId() {

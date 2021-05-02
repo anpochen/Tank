@@ -11,7 +11,7 @@ public class PropertyManager {
 
     static {
         try {
-            properties.load(PropertyManager.class.getClassLoader().getResourceAsStream("com/anpo/config/config"));
+            properties.load(PropertyManager.class.getClassLoader().getResourceAsStream("config"));
         } catch (IOException e) {
             e.printStackTrace();
         }

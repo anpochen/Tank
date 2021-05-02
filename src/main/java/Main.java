@@ -1,4 +1,5 @@
 import com.anpo.config.PropertyManager;
+import com.anpo.net.Client;
 import com.anpo.tank.bean.Audio;
 import com.anpo.tank.enums.Direction;
 import com.anpo.tank.bean.Tank;
@@ -32,8 +33,9 @@ public class Main {
                 }
                 tankFrame.repaint();
             }
-        });
+        }).start();
 
+        Client.INSTANCE.connect();
 
     }
 }

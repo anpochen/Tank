@@ -7,7 +7,7 @@ import java.awt.event.WindowEvent;
 public class ServerFrame extends Frame {
     public static final ServerFrame INSTANCE = new ServerFrame();
 
-    Button button = new Button("start Server");
+//    Button button = new Button("start Server");
     TextArea leftTextArea = new TextArea();
     TextArea rightTextArea = new TextArea();
     Server server = new Server();
@@ -15,7 +15,7 @@ public class ServerFrame extends Frame {
     public ServerFrame() throws HeadlessException {
         this.setSize(1200,600);
         this.setLocation(30,40);
-        this.add(button,BorderLayout.NORTH);
+//        this.add(button,BorderLayout.NORTH);
         Panel panel = new Panel(new GridLayout(1,2));
         panel.add(leftTextArea);
         panel.add(rightTextArea);
