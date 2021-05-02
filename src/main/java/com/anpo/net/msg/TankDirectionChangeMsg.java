@@ -1,6 +1,5 @@
 package com.anpo.net.msg;
 
-import com.anpo.net.Client;
 import com.anpo.net.enums.MsgType;
 import com.anpo.tank.bean.Tank;
 import com.anpo.tank.bean.TankFrame;
@@ -10,48 +9,42 @@ import com.anpo.tank.enums.Group;
 import java.io.*;
 import java.util.UUID;
 
-public class TankJoinMsg extends Msg{
+public class TankDirectionChangeMsg extends Msg{
 
     public UUID uuid;
     public int x,y;
     public Direction direction;
-    boolean moving;
-    public Group group;
 
-    public TankJoinMsg(Tank tank) {
+    public TankDirectionChangeMsg(Tank tank) {
         this.uuid = tank.getUuid();
         this.x = tank.getX();
         this.y = tank.getY();
         this.direction = tank.getDirection();
-        this.moving = tank.isMoving();
-        this.group = tank.getGroup();
     }
 
-    public TankJoinMsg(UUID id, int x, int y, Direction direction, boolean moving, Group group) {
+    public TankDirectionChangeMsg(UUID id, int x, int y, Direction direction) {
         this.uuid = id;
         this.x = x;
         this.y = y;
         this.direction = direction;
-        this.moving = moving;
-        this.group = group;
     }
 
-    public TankJoinMsg() {}
+    public TankDirectionChangeMsg() {}
 
     @Override
     public void handle() {
         //如果是自己发的消息，就不处理
-        //新增时发现有当前UUID的坦克，就不添加
-        if(this.uuid.equals(TankFrame.INSTANCE.getMyTank().getUuid()) ||
-                TankFrame.INSTANCE.findTankByUUID(this.uuid) != null ){
+        if(this.uuid.equals(TankFrame.INSTANCE.getMyTank().getUuid())){
             return;
         }
-        //添加别人的坦克
-        Tank tank = new Tank(this);
-        TankFrame.INSTANCE.addTank(tank);
 
-        //把自己坦克的信息发送给新加入的这个客户端
-        Client.INSTANCE.send(new TankJoinMsg(TankFrame.INSTANCE.getMyTank()));
+        Tank tank = TankFrame.INSTANCE.findTankByUUID(uuid);
+        if(tank != null ){
+            tank.setMoving(true);
+            tank.setDirection(this.direction);
+            tank.setX(this.x);
+            tank.setY(this.y);
+        }
     }
 
     /*
@@ -73,8 +66,6 @@ public class TankJoinMsg extends Msg{
             dataOutputStream.writeInt(x);
             dataOutputStream.writeInt(y);
             dataOutputStream.writeInt(direction.ordinal());
-            dataOutputStream.writeBoolean(moving);
-            dataOutputStream.writeInt(group.ordinal());
 
             dataOutputStream.flush();
             bytes = byteArrayOutputStream.toByteArray();
@@ -116,8 +107,6 @@ public class TankJoinMsg extends Msg{
             this.x = dataInputStream.readInt();
             this.y = dataInputStream.readInt();
             this.direction = Direction.values()[dataInputStream.readInt()];
-            this.moving = dataInputStream.readBoolean();
-            this.group = Group.values()[dataInputStream.readInt()];
 
         } catch (Exception e){
             e.printStackTrace();
@@ -142,7 +131,7 @@ public class TankJoinMsg extends Msg{
 
     @Override
     public MsgType getMsgType() {
-        return MsgType.TankJoinMsg;
+        return MsgType.TankDirectionChangeMsg;
     }
 
     public UUID getId() {
@@ -177,22 +166,6 @@ public class TankJoinMsg extends Msg{
         this.direction = direction;
     }
 
-    public boolean isMoving() {
-        return moving;
-    }
-
-    public void setMoving(boolean moving) {
-        this.moving = moving;
-    }
-
-    public Group getGroup() {
-        return group;
-    }
-
-    public void setGroup(Group group) {
-        this.group = group;
-    }
-
     @Override
     public String toString() {
         return "TankJoinMsg{" +
@@ -200,8 +173,6 @@ public class TankJoinMsg extends Msg{
                 ", x=" + x +
                 ", y=" + y +
                 ", direction=" + direction +
-                ", moving=" + moving +
-                ", group=" + group +
                 '}';
     }
 }

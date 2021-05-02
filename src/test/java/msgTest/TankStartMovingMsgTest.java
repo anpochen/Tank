@@ -1,9 +1,10 @@
 package msgTest;
 
+import com.anpo.net.enums.MsgType;
 import com.anpo.net.msg.MsgDecoder;
 import com.anpo.net.msg.MsgEncoder;
-import com.anpo.net.enums.MsgType;
 import com.anpo.net.msg.TankJoinMsg;
+import com.anpo.net.msg.TankStartMovingMsg;
 import com.anpo.tank.enums.Direction;
 import com.anpo.tank.enums.Group;
 import io.netty.buffer.ByteBuf;
@@ -15,39 +16,35 @@ import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 
-public class TankJoinMsgTest {
+public class TankStartMovingMsgTest {
 
     @Test
     public void testEncoder(){
         EmbeddedChannel channel = new EmbeddedChannel();
 
         UUID uuid = UUID.randomUUID();
-        TankJoinMsg tankJoinMsg = new TankJoinMsg(uuid,100,200, Direction.UP,true, Group.GOOD);
+        TankStartMovingMsg tankStartMovingMsg = new TankStartMovingMsg(uuid,100,200, Direction.UP);
 
         channel.pipeline().addLast(new MsgEncoder());
 
-        channel.writeOutbound(tankJoinMsg);
+        channel.writeOutbound(tankStartMovingMsg);
 
         ByteBuf byteBuf = (ByteBuf)channel.readOutbound();
         MsgType msgType = MsgType.values()[byteBuf.readInt()];
-        assertEquals(MsgType.TankJoinMsg, msgType);
+        assertEquals(MsgType.TankStartMovingMsg, msgType);
 
         int length = byteBuf.readInt();
-        assertEquals(length,33);
+        assertEquals(length,28);
 
         UUID uuid1 = new UUID(byteBuf.readLong(),byteBuf.readLong());
         int x = byteBuf.readInt();
         int y = byteBuf.readInt();
         Direction direction = Direction.values()[byteBuf.readInt()];
-        boolean moving = byteBuf.readBoolean();
-        Group group = Group.values()[byteBuf.readInt()];
 
         assertEquals(uuid1,uuid);
         assertEquals(x,100);
         assertEquals(y ,200);
         assertEquals(direction,Direction.UP);
-        assertEquals(moving,true);
-        assertEquals(group,Group.GOOD);
 
     }
 
@@ -56,26 +53,24 @@ public class TankJoinMsgTest {
         EmbeddedChannel channel = new EmbeddedChannel();
 
         UUID uuid = UUID.randomUUID();
-        TankJoinMsg tankJoinMsg = new TankJoinMsg(uuid,100,200, Direction.UP,true, Group.GOOD);
+        TankStartMovingMsg tankStartMovingMsg = new TankStartMovingMsg(uuid,100,200, Direction.UP);
 
         channel.pipeline().addLast(new MsgDecoder());
 
         ByteBuf byteBuf = Unpooled.buffer();
-        byteBuf.writeInt(MsgType.TankJoinMsg.ordinal());
-        byte [] bytes = tankJoinMsg.toBytes();
+        byteBuf.writeInt(MsgType.TankStartMovingMsg.ordinal());
+        byte [] bytes = tankStartMovingMsg.toBytes();
         byteBuf.writeInt(bytes.length);
         byteBuf.writeBytes(bytes);
 
         channel.writeInbound(byteBuf.duplicate());
 
-        TankJoinMsg tankJoinMsg1 = channel.readInbound();
+        TankStartMovingMsg tankStartMovingMsg1 = channel.readInbound();
 
-        assertEquals(tankJoinMsg1.uuid,uuid);
-        assertEquals(tankJoinMsg1.x,100);
-        assertEquals(tankJoinMsg1.y ,200);
-        assertEquals(tankJoinMsg1.direction,Direction.UP);
-        assertEquals(tankJoinMsg1.isMoving(),true);
-        assertEquals(tankJoinMsg1.group,Group.GOOD);
+        assertEquals(tankStartMovingMsg1.uuid,uuid);
+        assertEquals(tankStartMovingMsg1.x,100);
+        assertEquals(tankStartMovingMsg1.y ,200);
+        assertEquals(tankStartMovingMsg1.direction,Direction.UP);
 
 
     }

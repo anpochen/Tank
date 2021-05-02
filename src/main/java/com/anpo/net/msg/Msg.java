@@ -1,5 +1,7 @@
 package com.anpo.net.msg;
 
+import com.anpo.net.enums.MsgType;
+
 public abstract class Msg {
 
     public abstract void handle();

@@ -1,5 +1,6 @@
 package com.anpo.net.msg;
 
+import com.anpo.net.enums.MsgType;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
@@ -33,12 +34,19 @@ public class MsgDecoder extends ByteToMessageDecoder {
             case TankJoinMsg:
                 msg = new TankJoinMsg();
                 break;
+            case TankStartMovingMsg:
+                msg = new TankStartMovingMsg();
+                break;
+            case TankStopMovingMsg:
+                msg = new TankStopMovingMsg();
+                break;
+            case TankDirectionChangeMsg:
+                msg = new TankDirectionChangeMsg();
+                break;
             /*case TankDieMsg:
                 msg = new TankDieMsg();
                 break;
-            case TankMovingMsg:
-                msg = new TankMovingMsg();
-                break;
+
             case TankStopMsg:
                 msg = new TankStopMsg();
                 break;

@@ -1,6 +1,10 @@
 package com.anpo.tank.bean;
 
 import com.anpo.config.PropertyManager;
+import com.anpo.net.Client;
+import com.anpo.net.msg.TankDirectionChangeMsg;
+import com.anpo.net.msg.TankStartMovingMsg;
+import com.anpo.net.msg.TankStopMovingMsg;
 import com.anpo.tank.enums.Direction;
 import com.anpo.tank.enums.Group;
 
@@ -232,8 +236,10 @@ public class TankFrame extends Frame {
 
             if(!bl && !br && !bu && !bd){
                 myTank.setMoving(false);
+                Client.INSTANCE.send(new TankStopMovingMsg(getMyTank()));
             }else{
-                myTank.setMoving(true);
+                Direction direction = myTank.getDirection();
+
                 if(bl){
                     myTank.setDirection(Direction.LEFT);
                 }
@@ -245,6 +251,16 @@ public class TankFrame extends Frame {
                 }
                 if(bd){
                     myTank.setDirection(Direction.DOWN);
+                }
+
+                //只在开始移动时发送，减少发送的消息数量
+                if(!myTank.isMoving()){
+                    Client.INSTANCE.send(new TankStartMovingMsg(getMyTank()));
+                }
+                myTank.setMoving(true);
+
+                if(direction != myTank.getDirection()){
+                    Client.INSTANCE.send(new TankDirectionChangeMsg(getMyTank()));
                 }
             }
 
